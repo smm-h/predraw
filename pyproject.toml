@@ -1,6 +1,6 @@
 [project]
 name = "predraw"
-version = "0.1.2"
+version = "0.2.0"
 keywords = ["svg", "render", "json", "declarative", "png", "webp", "pipeline", "text-to-paths", "rlsbl"]
 description = "Declarative rendering pipeline: JSON in, SVG/PNG/WebP out"
 readme = "README.md"

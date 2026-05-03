@@ -1,6 +1,6 @@
 {
   "name": "predraw",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "Declarative rendering pipeline: JSON in, SVG/PNG/WebP out",
   "license": "MIT",
   "bin": {
