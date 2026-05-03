@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import copy
+
 from .model import CharStyle, Element, Scene, Transform
 
 
@@ -144,7 +146,14 @@ def _render_use(el: Element, scene: Scene, indent: int = 2) -> str:
     if not ref_name or not scene.defs or ref_name not in scene.defs:
         return f'{pad}<!-- unresolved use: {el.use} -->'
 
-    target = scene.defs[ref_name]
+    # Deep-copy the target so we never mutate scene.defs
+    target = copy.deepcopy(scene.defs[ref_name])
+
+    # Apply property overrides from the use element
+    override_fill = el.fill
+    override_opacity = el.opacity
+    if override_fill is not None or override_opacity != 1.0:
+        _apply_overrides(target, override_fill, override_opacity)
 
     # Wrap in <g> with the use-element's transform if present
     if el.transform:
@@ -154,6 +163,23 @@ def _render_use(el: Element, scene: Scene, indent: int = 2) -> str:
         return "\n".join(lines)
 
     return _render_element(target, scene, indent)
+
+
+def _apply_overrides(element: Element, fill: str | None, opacity: float) -> None:
+    """Recursively apply fill/opacity overrides to an element tree.
+
+    - fill: replaces child fill entirely (if not None)
+    - opacity: multiplies with existing child opacity (if != 1.0)
+    """
+    if fill is not None and element.fill is not None:
+        element.fill = fill
+    if opacity != 1.0:
+        element.opacity *= opacity
+
+    # Recurse into group children
+    if element.elements:
+        for child in element.elements:
+            _apply_overrides(child, fill, opacity)
 
 
 def _match_char_style(char: str, styles: list[CharStyle]) -> CharStyle | None:
