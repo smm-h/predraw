@@ -145,6 +145,63 @@
       },
       "additionalProperties": false
     },
+    "gradient": {
+      "type": "object",
+      "description": "A gradient fill/stroke definition.",
+      "required": ["type", "stops"],
+      "properties": {
+        "type": {
+          "enum": ["linear-gradient", "radial-gradient"]
+        },
+        "stops": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/gradientStop"
+          }
+        },
+        "angle": {
+          "type": "number"
+        },
+        "cx": {
+          "type": "number"
+        },
+        "cy": {
+          "type": "number"
+        },
+        "r": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "gradientStop": {
+      "type": "object",
+      "description": "A single stop in a gradient.",
+      "required": ["offset", "color"],
+      "properties": {
+        "offset": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "color": {
+          "type": "string"
+        },
+        "opacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "fillOrGradient": {
+      "description": "A color string or a gradient object.",
+      "oneOf": [
+        {"type": "string"},
+        {"$ref": "#/$defs/gradient"}
+      ]
+    },
     "element": {
       "description": "A drawable element. The type field determines which properties are relevant.",
       "oneOf": [
@@ -168,8 +225,7 @@
           "type": "string"
         },
         "fill": {
-          "type": "string",
-          "description": "Fill color (CSS color or $ref)."
+          "$ref": "#/$defs/fillOrGradient"
         },
         "opacity": {
           "type": "number",
@@ -211,14 +267,50 @@
           "default": 0
         },
         "fill": {
-          "type": "string",
-          "description": "Fill color (CSS color or $ref)."
+          "$ref": "#/$defs/fillOrGradient"
         },
         "opacity": {
           "type": "number",
           "minimum": 0,
           "maximum": 1,
           "default": 1.0
+        },
+        "stroke": {
+          "$ref": "#/$defs/fillOrGradient"
+        },
+        "strokeWidth": {
+          "type": "number"
+        },
+        "stroke_width": {
+          "type": "number"
+        },
+        "strokeDasharray": {
+          "type": "string"
+        },
+        "stroke_dasharray": {
+          "type": "string"
+        },
+        "strokeLinecap": {
+          "enum": ["butt", "round", "square"]
+        },
+        "stroke_linecap": {
+          "enum": ["butt", "round", "square"]
+        },
+        "strokeLinejoin": {
+          "enum": ["miter", "round", "bevel"]
+        },
+        "stroke_linejoin": {
+          "enum": ["miter", "round", "bevel"]
+        },
+        "strokeOpacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "stroke_opacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
         },
         "transform": {
           "$ref": "#/$defs/transform"
@@ -242,14 +334,50 @@
           "description": "SVG path data string."
         },
         "fill": {
-          "type": "string",
-          "description": "Fill color (CSS color or $ref)."
+          "$ref": "#/$defs/fillOrGradient"
         },
         "opacity": {
           "type": "number",
           "minimum": 0,
           "maximum": 1,
           "default": 1.0
+        },
+        "stroke": {
+          "$ref": "#/$defs/fillOrGradient"
+        },
+        "strokeWidth": {
+          "type": "number"
+        },
+        "stroke_width": {
+          "type": "number"
+        },
+        "strokeDasharray": {
+          "type": "string"
+        },
+        "stroke_dasharray": {
+          "type": "string"
+        },
+        "strokeLinecap": {
+          "enum": ["butt", "round", "square"]
+        },
+        "stroke_linecap": {
+          "enum": ["butt", "round", "square"]
+        },
+        "strokeLinejoin": {
+          "enum": ["miter", "round", "bevel"]
+        },
+        "stroke_linejoin": {
+          "enum": ["miter", "round", "bevel"]
+        },
+        "strokeOpacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "stroke_opacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
         },
         "transform": {
           "$ref": "#/$defs/transform"
@@ -287,8 +415,7 @@
           "default": "start"
         },
         "fill": {
-          "type": "string",
-          "description": "Fill color (CSS color or $ref)."
+          "$ref": "#/$defs/fillOrGradient"
         },
         "font": {
           "$ref": "#/$defs/font"
@@ -323,6 +450,43 @@
           "maximum": 1,
           "default": 1.0
         },
+        "stroke": {
+          "$ref": "#/$defs/fillOrGradient"
+        },
+        "strokeWidth": {
+          "type": "number"
+        },
+        "stroke_width": {
+          "type": "number"
+        },
+        "strokeDasharray": {
+          "type": "string"
+        },
+        "stroke_dasharray": {
+          "type": "string"
+        },
+        "strokeLinecap": {
+          "enum": ["butt", "round", "square"]
+        },
+        "stroke_linecap": {
+          "enum": ["butt", "round", "square"]
+        },
+        "strokeLinejoin": {
+          "enum": ["miter", "round", "bevel"]
+        },
+        "stroke_linejoin": {
+          "enum": ["miter", "round", "bevel"]
+        },
+        "strokeOpacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "stroke_opacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
         "transform": {
           "$ref": "#/$defs/transform"
         }
@@ -355,14 +519,50 @@
           }
         },
         "fill": {
-          "type": "string",
-          "description": "Fill color inherited by children (CSS color or $ref)."
+          "$ref": "#/$defs/fillOrGradient"
         },
         "opacity": {
           "type": "number",
           "minimum": 0,
           "maximum": 1,
           "default": 1.0
+        },
+        "stroke": {
+          "$ref": "#/$defs/fillOrGradient"
+        },
+        "strokeWidth": {
+          "type": "number"
+        },
+        "stroke_width": {
+          "type": "number"
+        },
+        "strokeDasharray": {
+          "type": "string"
+        },
+        "stroke_dasharray": {
+          "type": "string"
+        },
+        "strokeLinecap": {
+          "enum": ["butt", "round", "square"]
+        },
+        "stroke_linecap": {
+          "enum": ["butt", "round", "square"]
+        },
+        "strokeLinejoin": {
+          "enum": ["miter", "round", "bevel"]
+        },
+        "stroke_linejoin": {
+          "enum": ["miter", "round", "bevel"]
+        },
+        "strokeOpacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "stroke_opacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
         },
         "transform": {
           "$ref": "#/$defs/transform"
@@ -386,14 +586,50 @@
           "description": "Name of the def/import to instantiate."
         },
         "fill": {
-          "type": "string",
-          "description": "Fill color override (CSS color or $ref)."
+          "$ref": "#/$defs/fillOrGradient"
         },
         "opacity": {
           "type": "number",
           "minimum": 0,
           "maximum": 1,
           "default": 1.0
+        },
+        "stroke": {
+          "$ref": "#/$defs/fillOrGradient"
+        },
+        "strokeWidth": {
+          "type": "number"
+        },
+        "stroke_width": {
+          "type": "number"
+        },
+        "strokeDasharray": {
+          "type": "string"
+        },
+        "stroke_dasharray": {
+          "type": "string"
+        },
+        "strokeLinecap": {
+          "enum": ["butt", "round", "square"]
+        },
+        "stroke_linecap": {
+          "enum": ["butt", "round", "square"]
+        },
+        "strokeLinejoin": {
+          "enum": ["miter", "round", "bevel"]
+        },
+        "stroke_linejoin": {
+          "enum": ["miter", "round", "bevel"]
+        },
+        "strokeOpacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "stroke_opacity": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
         },
         "transform": {
           "$ref": "#/$defs/transform"
@@ -433,8 +669,8 @@
     },
     "placeStep": {
       "type": "object",
-      "description": "Places an element below another with an optional gap.",
-      "required": ["action", "target", "below"],
+      "description": "Places an element relative to another in a given direction (below, above, left, right).",
+      "required": ["action", "target"],
       "properties": {
         "action": {
           "const": "place"
@@ -447,12 +683,30 @@
           "type": "string",
           "description": "ID of the reference element to place below."
         },
+        "above": {
+          "type": "string",
+          "description": "ID of the reference element to place above."
+        },
+        "left": {
+          "type": "string",
+          "description": "ID of the reference element to place to the left of."
+        },
+        "right": {
+          "type": "string",
+          "description": "ID of the reference element to place to the right of."
+        },
         "gap": {
           "type": "number",
           "description": "Gap in pixels between the elements.",
           "default": 0
         }
       },
+      "anyOf": [
+        {"required": ["below"]},
+        {"required": ["above"]},
+        {"required": ["left"]},
+        {"required": ["right"]}
+      ],
       "additionalProperties": false
     },
     "groupStep": {

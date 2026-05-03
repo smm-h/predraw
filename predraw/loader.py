@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from .model import CharStyle, Element, Font, Scene, Style, Transform
+from .model import CharStyle, Element, Font, Gradient, GradientStop, Scene, Style, Transform
 
 
 def load_scene(path: str) -> Scene:
@@ -98,10 +98,18 @@ def _parse_element(data: dict) -> Element:
     if children_key:
         child_elements = [_parse_element(el) for el in data[children_key]]
 
+    # Parse fill: can be a string (color/$ref) or a dict (gradient)
+    fill_raw = data.get("fill")
+    fill = _parse_gradient(fill_raw) if isinstance(fill_raw, dict) else fill_raw
+
+    # Parse stroke: can be a string or a dict (gradient)
+    stroke_raw = data.get("stroke")
+    stroke = _parse_gradient(stroke_raw) if isinstance(stroke_raw, dict) else stroke_raw
+
     return Element(
         type=data.get("type", "use" if "use" in data else "group"),
         id=data.get("id"),
-        fill=data.get("fill"),
+        fill=fill,
         opacity=data.get("opacity", 1.0),
         transform=transform,
         x=data.get("x", 0),
@@ -115,7 +123,33 @@ def _parse_element(data: dict) -> Element:
         letter_spacing=data.get("letterSpacing", data.get("letter_spacing", 0)),
         char_styles=char_styles,
         elements=child_elements,
+        stroke=stroke,
+        stroke_width=data.get("strokeWidth", data.get("stroke_width")),
+        stroke_dasharray=data.get("strokeDasharray", data.get("stroke_dasharray")),
+        stroke_linecap=data.get("strokeLinecap", data.get("stroke_linecap")),
+        stroke_linejoin=data.get("strokeLinejoin", data.get("stroke_linejoin")),
+        stroke_opacity=data.get("strokeOpacity", data.get("stroke_opacity", 1.0)),
         use=data.get("use"),
+    )
+
+
+def _parse_gradient(data: dict) -> Gradient:
+    """Parse a gradient dict into a Gradient object."""
+    stops = [
+        GradientStop(
+            offset=s["offset"],
+            color=s["color"],
+            opacity=s.get("opacity", 1.0),
+        )
+        for s in data.get("stops", [])
+    ]
+    return Gradient(
+        type=data["type"],
+        stops=stops,
+        angle=data.get("angle", 0),
+        cx=data.get("cx", 0.5),
+        cy=data.get("cy", 0.5),
+        r=data.get("r", 0.5),
     )
 
 
@@ -158,11 +192,19 @@ def _resolve_element_styles(
     element: Element, styles: dict[str, Style], mode: str
 ) -> None:
     """Recursively resolve style references in an element."""
-    if element.fill and element.fill.startswith("$"):
+    # Only resolve string fills (skip Gradient objects)
+    if isinstance(element.fill, str) and element.fill.startswith("$"):
         style_name = element.fill[1:]  # strip the leading $
         if style_name in styles:
             style = styles[style_name]
             element.fill = style.dark if mode == "dark" else style.light
+
+    # Resolve stroke style token (skip Gradient objects)
+    if isinstance(element.stroke, str) and element.stroke.startswith("$"):
+        style_name = element.stroke[1:]
+        if style_name in styles:
+            style = styles[style_name]
+            element.stroke = style.dark if mode == "dark" else style.light
 
     # Resolve char_styles fills
     if element.char_styles:

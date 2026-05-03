@@ -26,7 +26,7 @@ def _execute_step(scene: Scene, step: dict) -> None:
     if action == "center":
         _center(scene, step["target"], step.get("axis", "both"))
     elif action == "place":
-        _place(scene, step["target"], step["below"], step.get("gap", 0))
+        _place(scene, step)
     elif action == "group":
         _group(scene, step["targets"], step["id"])
     elif action == "text-to-paths":
@@ -137,14 +137,33 @@ def _center_with_transform(scene: Scene, element: Element, axis: str) -> None:
         element.transform.translate = (existing[0] + tx, existing[1] + ty)
 
 
-def _place(scene: Scene, target_id: str, below_id: str, gap: float) -> None:
-    """Position an element relative to another (below it with a gap)."""
+def _place(scene: Scene, step: dict) -> None:
+    """Position an element relative to another in a given direction.
+
+    Supports directions: below, above, right, left.
+    """
     if not scene.elements:
         return
 
-    reference = _find_element(scene.elements, below_id)
+    target_id = step["target"]
+    gap = step.get("gap", 0)
+
+    # Detect direction and reference element ID
+    direction: str | None = None
+    ref_id: str | None = None
+    for d in ("below", "above", "right", "left"):
+        if d in step:
+            direction = d
+            ref_id = step[d]
+            break
+
+    if direction is None or ref_id is None:
+        warnings.warn("place: no direction key (below/above/right/left) found, skipping")
+        return
+
+    reference = _find_element(scene.elements, ref_id)
     if reference is None:
-        warnings.warn(f"place: reference element '{below_id}' not found, skipping")
+        warnings.warn(f"place: reference element '{ref_id}' not found, skipping")
         return
 
     target = _find_element(scene.elements, target_id)
@@ -152,21 +171,51 @@ def _place(scene: Scene, target_id: str, below_id: str, gap: float) -> None:
         warnings.warn(f"place: target element '{target_id}' not found, skipping")
         return
 
-    # Compute the bottom edge of the reference element using bounding box
     ref_bbox = compute_bbox(reference)
-    if ref_bbox:
-        ref_bottom = ref_bbox[3]  # max_y
-    else:
-        # Fallback to old logic when bbox can't be determined
-        if reference.type == "text":
-            ref_bottom = reference.y
-        elif reference.type in ("rect", "group"):
-            ref_bottom = reference.y + reference.height
-        else:
-            ref_bottom = reference.y
+    target_bbox = compute_bbox(target)
 
-    # Place target below reference with the given gap
-    target.y = ref_bottom + gap
+    if direction == "below":
+        if ref_bbox:
+            ref_bottom = ref_bbox[3]  # max_y
+        else:
+            if reference.type == "text":
+                ref_bottom = reference.y
+            elif reference.type in ("rect", "group"):
+                ref_bottom = reference.y + reference.height
+            else:
+                ref_bottom = reference.y
+        target.y = ref_bottom + gap
+
+    elif direction == "above":
+        if ref_bbox:
+            ref_top = ref_bbox[1]  # min_y
+        else:
+            ref_top = reference.y
+        # Compute target height from its bbox or element fields
+        if target_bbox:
+            target_height = target_bbox[3] - target_bbox[1]
+        else:
+            target_height = target.height
+        target.y = ref_top - gap - target_height
+
+    elif direction == "right":
+        if ref_bbox:
+            ref_right = ref_bbox[2]  # max_x
+        else:
+            ref_right = reference.x + reference.width
+        target.x = ref_right + gap
+
+    elif direction == "left":
+        if ref_bbox:
+            ref_left = ref_bbox[0]  # min_x
+        else:
+            ref_left = reference.x
+        # Compute target width from its bbox or element fields
+        if target_bbox:
+            target_width = target_bbox[2] - target_bbox[0]
+        else:
+            target_width = target.width
+        target.x = ref_left - gap - target_width
 
 
 def _group(scene: Scene, target_ids: list[str], group_id: str) -> None:

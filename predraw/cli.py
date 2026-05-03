@@ -11,7 +11,7 @@ from pathlib import Path
 
 from . import __version__
 from .loader import load_config, load_scene, resolve_styles
-from .model import Element, Font, Scene, Style, Transform
+from .model import Element, Font, Gradient, Scene, Style, Transform
 from .output import write_outputs
 from .pipeline import execute_pipeline
 from .renderer import render_svg
@@ -303,7 +303,7 @@ def _element_to_dict(el: Element) -> dict:
     if el.id:
         data["id"] = el.id
     if el.fill:
-        data["fill"] = el.fill
+        data["fill"] = _gradient_to_dict(el.fill) if isinstance(el.fill, Gradient) else el.fill
     if el.opacity != 1.0:
         data["opacity"] = el.opacity
     if el.transform:
@@ -350,10 +350,46 @@ def _element_to_dict(el: Element) -> dict:
     if el.elements:
         data["elements"] = [_element_to_dict(child) for child in el.elements]
 
+    # stroke
+    if el.stroke is not None:
+        data["stroke"] = _gradient_to_dict(el.stroke) if isinstance(el.stroke, Gradient) else el.stroke
+    if el.stroke_width is not None:
+        data["stroke_width"] = el.stroke_width
+    if el.stroke_dasharray is not None:
+        data["stroke_dasharray"] = el.stroke_dasharray
+    if el.stroke_linecap is not None:
+        data["stroke_linecap"] = el.stroke_linecap
+    if el.stroke_linejoin is not None:
+        data["stroke_linejoin"] = el.stroke_linejoin
+    if el.stroke_opacity != 1.0:
+        data["stroke_opacity"] = el.stroke_opacity
+
     # component reference
     if el.use:
         data["use"] = el.use
 
+    return data
+
+
+def _gradient_to_dict(grad: Gradient) -> dict:
+    """Convert a Gradient to a JSON-serializable dict, omitting defaults."""
+    data: dict = {"type": grad.type}
+    if grad.type == "linear-gradient":
+        if grad.angle != 0:
+            data["angle"] = grad.angle
+    elif grad.type == "radial-gradient":
+        if grad.cx != 0.5:
+            data["cx"] = grad.cx
+        if grad.cy != 0.5:
+            data["cy"] = grad.cy
+        if grad.r != 0.5:
+            data["r"] = grad.r
+    data["stops"] = []
+    for stop in grad.stops:
+        stop_data: dict = {"offset": stop.offset, "color": stop.color}
+        if stop.opacity != 1.0:
+            stop_data["opacity"] = stop.opacity
+        data["stops"].append(stop_data)
     return data
 
 
