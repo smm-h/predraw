@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.1
+
+- Bounding box calculation for paths — `place` pipeline step now uses real geometry instead of font-size heuristic
+- Local `fonts/` directory support — project-local fonts searched before system fonts for reproducible rendering
+- Component property overrides — `use` elements can override `fill` (replaces) and `opacity` (multiplies) on referenced components
+
 ## 0.1.0
 
 - Declarative JSON format for describing visual assets (rect, path, text, group, background)
