@@ -1,7 +1,0 @@
-{
-  "outputs": [
-    {"format": "svg", "path": "social-preview.svg", "mode": "dark"},
-    {"format": "png", "path": "social-preview.png", "mode": "dark"},
-    {"format": "webp", "path": "social-preview.webp", "mode": "dark", "quality": 90}
-  ]
-}

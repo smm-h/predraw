@@ -1,7 +1,0 @@
-{
-  "outputs": [
-    {"format": "svg", "path": "rlsbl-logo-dark.svg", "mode": "dark"},
-    {"format": "svg", "path": "rlsbl-logo-light.svg", "mode": "light"},
-    {"format": "png", "path": "rlsbl-logo-dark.png", "mode": "dark"}
-  ]
-}
