@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import warnings
 
+from .bbox import compute_bbox
 from .model import Element, Scene, Transform
 
 
@@ -151,15 +152,18 @@ def _place(scene: Scene, target_id: str, below_id: str, gap: float) -> None:
         warnings.warn(f"place: target element '{target_id}' not found, skipping")
         return
 
-    # Compute the bottom edge of the reference element
-    if reference.type == "text":
-        # For text, y is the baseline; bottom is approximately at y
-        ref_bottom = reference.y
-    elif reference.type in ("rect", "group"):
-        ref_bottom = reference.y + reference.height
+    # Compute the bottom edge of the reference element using bounding box
+    ref_bbox = compute_bbox(reference)
+    if ref_bbox:
+        ref_bottom = ref_bbox[3]  # max_y
     else:
-        # Fallback: use y as bottom
-        ref_bottom = reference.y
+        # Fallback to old logic when bbox can't be determined
+        if reference.type == "text":
+            ref_bottom = reference.y
+        elif reference.type in ("rect", "group"):
+            ref_bottom = reference.y + reference.height
+        else:
+            ref_bottom = reference.y
 
     # Place target below reference with the given gap
     target.y = ref_bottom + gap
@@ -203,6 +207,8 @@ def _replace_element(elements: list[Element], element_id: str, replacement: Elem
 
 def _text_to_paths(scene: Scene, target_id: str) -> None:
     """Convert a text element to a group of path elements using font outlines."""
+    import os
+
     if not scene.elements:
         return
 
@@ -217,7 +223,10 @@ def _text_to_paths(scene: Scene, target_id: str) -> None:
     font_weight = element.font.weight if element.font else 400
     font_size = element.font.size if element.font else 16
 
-    font_path = find_font(font_family, font_weight)
+    # Check for local fonts/ directory relative to CWD
+    project_dir = os.getcwd() if os.path.isdir(os.path.join(os.getcwd(), "fonts")) else None
+
+    font_path = find_font(font_family, font_weight, project_dir=project_dir)
     if font_path is None:
         warnings.warn(f"text-to-paths: font '{font_family}' not found, keeping as text")
         return
