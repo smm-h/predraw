@@ -75,6 +75,12 @@ Build:
 predraw build my-asset/
 ```
 
+Or auto-rebuild on changes:
+
+```
+predraw watch my-asset/
+```
+
 ## Commands
 
 ### init [path]

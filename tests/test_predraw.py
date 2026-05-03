@@ -974,8 +974,8 @@ class TestPackRoundTripAdvanced:
         assert isinstance(el["fill"], dict)
         assert el["fill"]["type"] == "linear-gradient"
         assert el["stroke"] == "#00ff00"
-        assert el["stroke_width"] == 3
-        assert el["stroke_dasharray"] == "5 3"
+        assert el["strokeWidth"] == 3
+        assert el["strokeDasharray"] == "5 3"
 
 
 class TestWatch:
@@ -1014,3 +1014,27 @@ class TestWatch:
         mtimes = _get_mtimes(files)
         assert len(mtimes) == 2
         assert all(isinstance(v, float) for v in mtimes.values())
+
+
+class TestGradientStyleResolution:
+    def test_gradient_fill_survives_style_resolution(self):
+        from predraw.model import Scene, Element, Gradient, GradientStop, Style
+        from predraw.loader import resolve_styles
+        import copy
+
+        grad = Gradient(type="linear-gradient", stops=[GradientStop(0, "#ff0000"), GradientStop(1, "#0000ff")])
+        scene = Scene(
+            width=100, height=100,
+            styles={"fg": Style(light="#000", dark="#fff")},
+            elements=[
+                Element(type="rect", fill=grad),
+                Element(type="rect", fill="$fg"),
+            ]
+        )
+        resolved = copy.deepcopy(scene)
+        resolve_styles(resolved, "dark")
+        # Gradient fill should be untouched
+        assert isinstance(resolved.elements[0].fill, Gradient)
+        assert resolved.elements[0].fill.stops[0].color == "#ff0000"
+        # String fill should be resolved
+        assert resolved.elements[1].fill == "#fff"

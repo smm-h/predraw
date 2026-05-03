@@ -196,8 +196,8 @@ def _cmd_init(path: str) -> None:
 
 
 def _collect_json_files(project_dir: Path) -> list[Path]:
-    """Collect all .json files in the project directory (recursively)."""
-    return list(project_dir.rglob("*.json"))
+    """Collect all .json files in the project directory, excluding *.local-only dirs."""
+    return [f for f in project_dir.rglob("*.json") if ".local-only" not in str(f)]
 
 
 def _get_mtimes(files: list[Path]) -> dict[Path, float]:
@@ -489,15 +489,15 @@ def _element_to_dict(el: Element) -> dict:
     if el.stroke is not None:
         data["stroke"] = _gradient_to_dict(el.stroke) if isinstance(el.stroke, Gradient) else el.stroke
     if el.stroke_width is not None:
-        data["stroke_width"] = el.stroke_width
+        data["strokeWidth"] = el.stroke_width
     if el.stroke_dasharray is not None:
-        data["stroke_dasharray"] = el.stroke_dasharray
+        data["strokeDasharray"] = el.stroke_dasharray
     if el.stroke_linecap is not None:
-        data["stroke_linecap"] = el.stroke_linecap
+        data["strokeLinecap"] = el.stroke_linecap
     if el.stroke_linejoin is not None:
-        data["stroke_linejoin"] = el.stroke_linejoin
+        data["strokeLinejoin"] = el.stroke_linejoin
     if el.stroke_opacity != 1.0:
-        data["stroke_opacity"] = el.stroke_opacity
+        data["strokeOpacity"] = el.stroke_opacity
 
     # component reference
     if el.use:
