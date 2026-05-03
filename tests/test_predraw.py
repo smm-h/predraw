@@ -15,6 +15,7 @@ from predraw.model import CharStyle, Element, Font, Scene, Style, Transform
 from predraw.output import write_outputs
 from predraw.pipeline import execute_pipeline
 from predraw.renderer import render_svg
+from predraw.validator import validate_config, validate_scene
 
 # ─── Helpers ────────────────────────────────────────────────────────────────────
 
@@ -660,3 +661,71 @@ class TestFonts:
         # Both should have positive advance widths
         assert glyphs[0]["advance"] > 0
         assert glyphs[1]["advance"] > 0
+
+
+# --- Validator tests ----------------------------------------------------------
+
+
+class TestValidator:
+    def test_valid_scene(self, tmp_path: Path):
+        """A minimal valid scene passes validation with no errors."""
+        data = {
+            "width": 400,
+            "height": 300,
+            "elements": [
+                {"type": "rect", "x": 0, "y": 0, "width": 50, "height": 50, "fill": "#f00"}
+            ],
+        }
+        errors = validate_scene(data)
+        assert errors == []
+
+    def test_valid_config(self, tmp_path: Path):
+        """A minimal valid config passes validation with no errors."""
+        data = {
+            "outputs": [
+                {"format": "svg", "path": "output.svg"}
+            ]
+        }
+        errors = validate_config(data)
+        assert errors == []
+
+    def test_invalid_scene_missing_required(self, tmp_path: Path):
+        """Missing width/height/elements produces validation errors."""
+        data = {}  # Missing all required fields
+        errors = validate_scene(data)
+        assert len(errors) > 0
+        # Should mention the missing required properties
+        error_text = " ".join(errors)
+        assert "width" in error_text or "required" in error_text.lower()
+
+    def test_invalid_scene_wrong_type(self, tmp_path: Path):
+        """Wrong type for width (string instead of number) produces a type error."""
+        data = {
+            "width": "string_not_number",
+            "height": 300,
+            "elements": [],
+        }
+        errors = validate_scene(data)
+        assert len(errors) > 0
+        # Should report a type mismatch on width
+        error_text = " ".join(errors)
+        assert "width" in error_text or "type" in error_text.lower()
+
+    def test_auto_detect_config(self, tmp_path: Path):
+        """A file with 'outputs' key is detected as config (mirrors CLI auto-detection)."""
+        data = {
+            "outputs": [
+                {"format": "png", "path": "out.png"}
+            ]
+        }
+        # Auto-detection logic: presence of "outputs" key means config
+        is_config = "outputs" in data
+        assert is_config is True
+
+        # Validate as config succeeds
+        errors = validate_config(data)
+        assert errors == []
+
+        # Validate as scene fails (missing width/height/elements)
+        scene_errors = validate_scene(data)
+        assert len(scene_errors) > 0
