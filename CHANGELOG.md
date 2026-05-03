@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.2.1
+
+- Fix CI: Node shim test activates venv so Python deps are available
+- Dynamic version detection via `importlib.metadata` (no more hardcoded `__init__.py`)
+- README: local fonts section, fixed schema paths
+- 57 tests (up from 50)
+
 ## 0.2.0
 
 - Stroke support (`stroke`, `strokeWidth`, `strokeDasharray`, `strokeLinecap`, `strokeLinejoin`, `strokeOpacity`)
