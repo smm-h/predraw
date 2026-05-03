@@ -14,6 +14,7 @@ from .model import Element, Font, Scene, Style, Transform
 from .output import write_outputs
 from .pipeline import execute_pipeline
 from .renderer import render_svg
+from .validator import validate_config, validate_scene
 
 
 def main():
@@ -35,6 +36,11 @@ def main():
     unpack_parser.add_argument("file", help="Packed JSON file to unpack")
     unpack_parser.add_argument("-o", "--output", default=".", help="Output directory (default: .)")
 
+    # -- validate --
+    validate_parser = subparsers.add_parser("validate", help="Validate a scene or config JSON file against its schema")
+    validate_parser.add_argument("file", help="JSON file to validate")
+    validate_parser.add_argument("--schema", choices=["scene", "config"], default=None, help="Force schema type (auto-detected if omitted)")
+
     args = parser.parse_args()
 
     if args.command is None:
@@ -48,6 +54,8 @@ def main():
             _cmd_pack(args.path, args.output)
         elif args.command == "unpack":
             _cmd_unpack(args.file, args.output)
+        elif args.command == "validate":
+            _cmd_validate(args.file, args.schema)
     except FileNotFoundError as e:
         print(f"Error: {e}", file=sys.stderr)
         sys.exit(1)
@@ -99,6 +107,38 @@ def _cmd_build(path: str) -> None:
         total_written.extend(written)
 
     print(f"\nDone — {len(total_written)} file(s) written.")
+
+
+# ─── Validate ───────────────────────────────────────────────────────────────
+
+
+def _cmd_validate(file: str, schema_type: str | None) -> None:
+    """Validate a JSON file against its scene or config schema."""
+    file_path = Path(file)
+    if not file_path.exists():
+        raise FileNotFoundError(f"File not found: {file}")
+
+    with open(file_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    # Auto-detect schema type if not forced: presence of "outputs" key means config
+    if schema_type is None:
+        schema_type = "config" if "outputs" in data else "scene"
+
+    if schema_type == "config":
+        errors = validate_config(data)
+        label = "config"
+    else:
+        errors = validate_scene(data)
+        label = "scene"
+
+    if errors:
+        print(f"Invalid {label} file: {file_path}", file=sys.stderr)
+        for err in errors:
+            print(f"  {err}", file=sys.stderr)
+        sys.exit(1)
+    else:
+        print(f"Valid {label} file")
 
 
 # ─── Pack ────────────────────────────────────────────────────────────────────
