@@ -1,0 +1,43 @@
+{
+  "width": 1280,
+  "height": 640,
+  "styles": {
+    "bg": {"light": "#ffffff", "dark": "#0f0f0f"},
+    "solid": {"light": "#000000", "dark": "#ffffff"},
+    "ghost": {"light": "#000000", "dark": "#ffffff"},
+    "muted": {"light": "#666666", "dark": "#999999"},
+    "subtle": {"light": "#cccccc", "dark": "#333333"}
+  },
+  "imports": {
+    "wordmark": "./components/wordmark.json"
+  },
+  "elements": [
+    {
+      "type": "background",
+      "fill": "$bg"
+    },
+    {
+      "use": "wordmark",
+      "transform": {"translate": [310, 190], "scale": [2.0, 2.0]}
+    },
+    {
+      "type": "text",
+      "id": "tagline",
+      "content": "One command to release everywhere.",
+      "x": 640,
+      "y": 460,
+      "anchor": "middle",
+      "fill": "$muted",
+      "font": {"family": "system-ui, -apple-system, Helvetica, Arial, sans-serif", "size": 28},
+      "letterSpacing": 0.5
+    },
+    {
+      "type": "rect",
+      "x": 540,
+      "y": 500,
+      "width": 200,
+      "height": 1,
+      "fill": "$subtle"
+    }
+  ]
+}
