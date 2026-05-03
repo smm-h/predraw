@@ -211,6 +211,16 @@ def _get_mtimes(files: list[Path]) -> dict[Path, float]:
     return mtimes
 
 
+def _detect_changes(prev_mtimes: dict[Path, float], curr_mtimes: dict[Path, float]) -> bool:
+    """Return True if any files were added, removed, or modified."""
+    if set(curr_mtimes.keys()) != set(prev_mtimes.keys()):
+        return True
+    for f, mtime in curr_mtimes.items():
+        if prev_mtimes.get(f) != mtime:
+            return True
+    return False
+
+
 def _cmd_watch(path: str) -> None:
     """Watch project files and rebuild on change."""
     project_dir = Path(path).resolve()
@@ -233,17 +243,7 @@ def _cmd_watch(path: str) -> None:
             files = _collect_json_files(project_dir)
             curr_mtimes = _get_mtimes(files)
 
-            # Detect changes: new files, modified files, deleted files
-            changed = False
-            if set(curr_mtimes.keys()) != set(prev_mtimes.keys()):
-                changed = True
-            else:
-                for f, mtime in curr_mtimes.items():
-                    if prev_mtimes.get(f) != mtime:
-                        changed = True
-                        break
-
-            if changed:
+            if _detect_changes(prev_mtimes, curr_mtimes):
                 # Debounce: wait 0.3s then re-check for further changes
                 time.sleep(0.3)
                 files = _collect_json_files(project_dir)

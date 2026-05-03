@@ -976,3 +976,41 @@ class TestPackRoundTripAdvanced:
         assert el["stroke"] == "#00ff00"
         assert el["stroke_width"] == 3
         assert el["stroke_dasharray"] == "5 3"
+
+
+class TestWatch:
+    def test_detect_changes_no_change(self):
+        from predraw.cli import _detect_changes
+        prev = {Path("a.json"): 1000.0, Path("b.json"): 2000.0}
+        curr = {Path("a.json"): 1000.0, Path("b.json"): 2000.0}
+        assert _detect_changes(prev, curr) is False
+
+    def test_detect_changes_modified_file(self):
+        from predraw.cli import _detect_changes
+        prev = {Path("a.json"): 1000.0}
+        curr = {Path("a.json"): 1001.0}
+        assert _detect_changes(prev, curr) is True
+
+    def test_detect_changes_new_file(self):
+        from predraw.cli import _detect_changes
+        prev = {Path("a.json"): 1000.0}
+        curr = {Path("a.json"): 1000.0, Path("b.json"): 2000.0}
+        assert _detect_changes(prev, curr) is True
+
+    def test_detect_changes_deleted_file(self):
+        from predraw.cli import _detect_changes
+        prev = {Path("a.json"): 1000.0, Path("b.json"): 2000.0}
+        curr = {Path("a.json"): 1000.0}
+        assert _detect_changes(prev, curr) is True
+
+    def test_collect_and_mtimes(self, tmp_path):
+        from predraw.cli import _collect_json_files, _get_mtimes
+        (tmp_path / "main.json").write_text("{}")
+        (tmp_path / "sub").mkdir()
+        (tmp_path / "sub" / "comp.json").write_text("{}")
+        (tmp_path / "ignore.txt").write_text("nope")
+        files = _collect_json_files(tmp_path)
+        assert len(files) == 2
+        mtimes = _get_mtimes(files)
+        assert len(mtimes) == 2
+        assert all(isinstance(v, float) for v in mtimes.values())
