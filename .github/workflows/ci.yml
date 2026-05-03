@@ -13,6 +13,10 @@ jobs:
     steps:
     - uses: actions/checkout@v6
     - uses: astral-sh/setup-uv@v7
+    - uses: actions/setup-node@v4
+      with:
+        node-version: '24'
     - run: uv python install ${{ matrix.python-version }}
     - run: uv sync
     - run: uv run python -c "import predraw"
+    - run: node bin/cli.js --help
