@@ -11,7 +11,7 @@ import pytest
 from predraw.cli import pack_scene, unpack_scene
 from predraw.fonts import find_font, get_glyph_paths
 from predraw.loader import load_config, load_scene, resolve_styles
-from predraw.model import CharStyle, Element, Font, Scene, Style, Transform
+from predraw.model import CharStyle, Element, Font, Gradient, GradientStop, Scene, Style, Transform
 from predraw.output import write_outputs
 from predraw.pipeline import execute_pipeline
 from predraw.renderer import render_svg
@@ -729,3 +729,200 @@ class TestValidator:
         # Validate as scene fails (missing width/height/elements)
         scene_errors = validate_scene(data)
         assert len(scene_errors) > 0
+
+
+# ─── Stroke tests ──────────────────────────────────────────────────────────────
+
+
+class TestStroke:
+    def test_render_rect_with_stroke(self):
+        """Rect with stroke and stroke_width renders correct SVG attributes."""
+        rect = Element(
+            type="rect", x=0, y=0, width=50, height=30,
+            fill="#00ff00", stroke="#ff0000", stroke_width=2,
+        )
+        scene = _make_scene(elements=[rect])
+        svg = render_svg(scene)
+
+        assert 'stroke="#ff0000"' in svg
+        assert 'stroke-width="2"' in svg
+
+    def test_stroke_dasharray(self):
+        """Rect with stroke_dasharray renders the stroke-dasharray attribute."""
+        rect = Element(
+            type="rect", x=0, y=0, width=40, height=20,
+            fill="#000", stroke="#fff", stroke_width=1, stroke_dasharray="5 3",
+        )
+        scene = _make_scene(elements=[rect])
+        svg = render_svg(scene)
+
+        assert 'stroke-dasharray="5 3"' in svg
+
+    def test_stroke_style_resolution(self):
+        """Stroke with a $style token resolves to the correct color."""
+        scene_data = {
+            "width": 100,
+            "height": 100,
+            "styles": {"primary": {"light": "#111111", "dark": "#eeeeee"}},
+            "elements": [
+                {"type": "rect", "width": 10, "height": 10, "fill": "#000", "stroke": "$primary"}
+            ],
+        }
+        import json
+        from predraw.loader import load_scene, resolve_styles
+
+        import tempfile
+        from pathlib import Path as P
+
+        with tempfile.TemporaryDirectory() as td:
+            f = P(td) / "scene.json"
+            f.write_text(json.dumps(scene_data), encoding="utf-8")
+            scene = load_scene(str(f))
+            resolve_styles(scene, "dark")
+
+        assert scene.elements[0].stroke == "#eeeeee"
+
+
+# ─── Gradient tests ────────────────────────────────────────────────────────────
+
+
+class TestGradient:
+    def test_linear_gradient_render(self):
+        """Rect with a linear-gradient fill produces linearGradient and url(#grad-...) in SVG."""
+        grad = Gradient(
+            type="linear-gradient",
+            stops=[GradientStop(offset=0, color="#ff0000"), GradientStop(offset=1, color="#0000ff")],
+            angle=90,
+        )
+        rect = Element(type="rect", x=0, y=0, width=100, height=50, fill=grad)
+        scene = _make_scene(elements=[rect])
+        svg = render_svg(scene)
+
+        assert "<linearGradient" in svg
+        assert "url(#grad-" in svg
+
+    def test_radial_gradient_render(self):
+        """Rect with a radial-gradient fill produces radialGradient in SVG."""
+        grad = Gradient(
+            type="radial-gradient",
+            stops=[GradientStop(offset=0, color="#ffffff"), GradientStop(offset=1, color="#000000")],
+        )
+        rect = Element(type="rect", x=0, y=0, width=80, height=80, fill=grad)
+        scene = _make_scene(elements=[rect])
+        svg = render_svg(scene)
+
+        assert "<radialGradient" in svg
+
+    def test_gradient_in_defs(self):
+        """Gradient definition appears inside a <defs> section."""
+        grad = Gradient(
+            type="linear-gradient",
+            stops=[GradientStop(offset=0, color="#aaa"), GradientStop(offset=1, color="#bbb")],
+        )
+        rect = Element(type="rect", x=0, y=0, width=60, height=40, fill=grad)
+        scene = _make_scene(elements=[rect])
+        svg = render_svg(scene)
+
+        # The <defs> block should contain the gradient
+        defs_start = svg.find("<defs>")
+        defs_end = svg.find("</defs>")
+        assert defs_start != -1
+        assert defs_end != -1
+        defs_section = svg[defs_start:defs_end]
+        assert "<linearGradient" in defs_section
+
+
+# ─── Place directions tests ────────────────────────────────────────────────────
+
+
+class TestPlaceDirections:
+    def test_place_right(self):
+        """Places element to the right of another with gap, verifying x position."""
+        rect_a = _make_rect(id="a", x=10, y=0, width=50, height=30)
+        rect_b = _make_rect(id="b", x=0, y=0, width=40, height=20)
+        scene = _make_scene(
+            elements=[rect_a, rect_b],
+            pipeline=[{"action": "place", "target": "b", "right": "a", "gap": 8}],
+        )
+        execute_pipeline(scene)
+
+        # rect_a right edge = x + width = 10 + 50 = 60; b.x = 60 + 8 = 68
+        assert scene.elements[1].x == 68.0
+
+    def test_place_above(self):
+        """Places element above another with gap, verifying y position."""
+        rect_a = _make_rect(id="a", x=0, y=50, width=50, height=30)
+        rect_b = _make_rect(id="b", x=0, y=0, width=40, height=20)
+        scene = _make_scene(
+            elements=[rect_a, rect_b],
+            pipeline=[{"action": "place", "target": "b", "above": "a", "gap": 5}],
+        )
+        execute_pipeline(scene)
+
+        # rect_a top = y = 50; b.y = 50 - 5 - b.height(20) = 25
+        assert scene.elements[1].y == 25.0
+
+
+# ─── Init command tests ────────────────────────────────────────────────────────
+
+
+class TestInit:
+    def test_init_creates_files(self, tmp_path: Path):
+        """Running init in an empty dir creates main.json and config.json with valid JSON."""
+        from predraw.cli import _cmd_init
+
+        target = tmp_path / "myproject"
+        _cmd_init(str(target))
+
+        main_file = target / "main.json"
+        config_file = target / "config.json"
+
+        assert main_file.exists()
+        assert config_file.exists()
+
+        # Verify both are valid JSON
+        main_data = json.loads(main_file.read_text(encoding="utf-8"))
+        config_data = json.loads(config_file.read_text(encoding="utf-8"))
+
+        assert "width" in main_data
+        assert "height" in main_data
+        assert "outputs" in config_data
+
+    def test_init_errors_on_existing(self, tmp_path: Path):
+        """Running init when main.json already exists raises SystemExit."""
+        from predraw.cli import _cmd_init
+
+        # Create main.json first
+        main_file = tmp_path / "main.json"
+        main_file.write_text("{}", encoding="utf-8")
+
+        with pytest.raises(SystemExit):
+            _cmd_init(str(tmp_path))
+
+
+# ─── Dry run tests ─────────────────────────────────────────────────────────────
+
+
+class TestDryRun:
+    def test_build_dry_run(self, tmp_path: Path):
+        """Running build with dry_run=True produces no output files."""
+        from predraw.cli import _cmd_build
+
+        # Set up a valid project
+        scene_data = {
+            "width": 200,
+            "height": 100,
+            "elements": [{"type": "rect", "x": 0, "y": 0, "width": 50, "height": 30, "fill": "#f00"}],
+        }
+        config_data = {
+            "outputs": [
+                {"format": "svg", "path": "output.svg"},
+            ]
+        }
+        (tmp_path / "main.json").write_text(json.dumps(scene_data), encoding="utf-8")
+        (tmp_path / "config.json").write_text(json.dumps(config_data), encoding="utf-8")
+
+        _cmd_build(str(tmp_path), dry_run=True)
+
+        # No output file should have been created
+        assert not (tmp_path / "output.svg").exists()
