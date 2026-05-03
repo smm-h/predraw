@@ -12,9 +12,6 @@ if [ -f go.mod ]; then
   go vet ./...
   go build ./...
   go test ./... -race -short -count=1
-elif [ -f package.json ]; then
-  echo "Detected npm project"
-  npm test
 elif [ -f pyproject.toml ]; then
   echo "Detected Python project"
   if command -v uv &>/dev/null; then
@@ -22,6 +19,9 @@ elif [ -f pyproject.toml ]; then
   elif command -v pytest &>/dev/null; then
     pytest
   fi
+elif [ -f package.json ]; then
+  echo "Detected npm project"
+  npm test
 fi
 
 echo "Pre-release checks passed."
