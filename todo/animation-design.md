@@ -320,3 +320,12 @@ No new Python packages required. ffmpeg is an optional system dependency gated b
 ### Rationale
 
 v0.3 covers the most common animation patterns (fade in, slide in, color change, staggered entrance) with the two most portable output formats (SVG works everywhere; GIF is universal for short loops). This avoids the ffmpeg system dependency and keeps the interpolation engine simple (numbers and 2-tuples only, plus basic color lerp in sRGB). Transform rotation adds complexity around origin points; scale interacts with existing translate; both are deferred.
+
+## 7. Open Questions (Resolved)
+
+| Question | Decision |
+|---|---|
+| Sequencing model | Add timeline groups alongside delay-based sequencing |
+| Static frame for animated scenes | Default to frame 0, optional `time` field in config outputs |
+| Color interpolation | sRGB for v0.3, OKLab for v0.4 |
+| Path morphing | Keep on roadmap (future, post-v0.4) |

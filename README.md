@@ -224,6 +224,18 @@ Ordered postprocessing steps:
 | `place` | `target`, `below`/`above`/`left`/`right`, `gap` | Position element relative to another |
 | `group` | `targets`, `id` | Wrap elements into a group |
 
+### Local fonts
+
+Place `.ttf` or `.otf` files in a `fonts/` directory in your project. These are searched before system fonts, enabling reproducible rendering across machines.
+
+```
+my-asset/
+  main.json
+  config.json
+  fonts/
+    Inter-Bold.ttf
+```
+
 ### Components
 
 Split reusable parts into separate files:
@@ -286,8 +298,8 @@ project/
 
 Formal schemas for editor validation and LLM structured output:
 
-- `schema/scene.schema.json` -- scene format
-- `schema/config.schema.json` -- config format
+- `predraw/schema/scene.schema.json` -- scene format
+- `predraw/schema/config.schema.json` -- config format
 
 ## Requirements
 
