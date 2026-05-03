@@ -77,13 +77,32 @@ predraw build my-asset/
 
 ## Commands
 
-### build [path]
+### init [path]
+
+Create a starter project with `main.json` and `config.json`.
+
+```
+predraw init                     # current directory
+predraw init my-asset/           # create in new directory
+```
+
+### build [path] [--dry-run]
 
 Render all outputs defined in `config.json`. Path can be a directory (looks for `main.json`) or a file.
 
 ```
 predraw build                    # current directory
 predraw build path/to/project    # explicit path
+predraw build --dry-run          # preview without rendering
+```
+
+### watch [path]
+
+Auto-rebuild when project files change. Polls for changes every 0.5s with 0.3s debounce.
+
+```
+predraw watch                    # watch current directory
+predraw watch my-asset/          # watch specific project
 ```
 
 ### pack [path] [-o file]
@@ -118,10 +137,36 @@ predraw validate config.json --schema config
 | Type | Purpose | Key properties |
 |---|---|---|
 | `background` | Full-canvas fill | `fill` |
-| `rect` | Rectangle | `x`, `y`, `width`, `height`, `fill` |
-| `path` | SVG path | `d`, `fill`, `opacity`, `transform` |
-| `text` | Text (can convert to paths) | `content`, `font`, `anchor`, `charStyles` |
+| `rect` | Rectangle | `x`, `y`, `width`, `height`, `fill`, `stroke` |
+| `path` | SVG path | `d`, `fill`, `opacity`, `transform`, `stroke` |
+| `text` | Text (can convert to paths) | `content`, `font`, `anchor`, `charStyles`, `stroke` |
 | `group` | Container | `elements`, `transform` |
+
+### Stroke
+
+All visible elements support stroke properties:
+
+```json
+{"type": "rect", "width": 100, "height": 50, "stroke": "#ff0000", "strokeWidth": 2, "strokeDasharray": "5 3"}
+```
+
+Properties: `stroke`, `strokeWidth`, `strokeDasharray`, `strokeLinecap` (butt/round/square), `strokeLinejoin` (miter/round/bevel), `strokeOpacity`.
+
+### Gradients
+
+Fill and stroke accept gradient objects:
+
+```json
+{"fill": {"type": "linear-gradient", "angle": 90, "stops": [
+  {"offset": 0, "color": "#ff0000"},
+  {"offset": 1, "color": "#0000ff"}
+]}}
+
+{"fill": {"type": "radial-gradient", "cx": 0.5, "cy": 0.5, "r": 0.5, "stops": [
+  {"offset": 0, "color": "#ffffff"},
+  {"offset": 1, "color": "#000000", "opacity": 0.5}
+]}}
+```
 
 ### Use (component instantiation)
 
@@ -176,7 +221,7 @@ Ordered postprocessing steps:
 |---|---|---|
 | `text-to-paths` | `target` | Convert text to path outlines via font glyphs |
 | `center` | `target`, `axis` (x/y/both) | Center element on canvas |
-| `place` | `target`, `below`, `gap` | Position element below another |
+| `place` | `target`, `below`/`above`/`left`/`right`, `gap` | Position element relative to another |
 | `group` | `targets`, `id` | Wrap elements into a group |
 
 ### Components

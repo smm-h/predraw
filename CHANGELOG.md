@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.2.0
+
+- Stroke support (`stroke`, `strokeWidth`, `strokeDasharray`, `strokeLinecap`, `strokeLinejoin`, `strokeOpacity`)
+- Gradient fills — `linear-gradient` and `radial-gradient` as fill/stroke objects, rendered as SVG `<defs>`
+- Place directions — `place` pipeline step now supports `above`, `left`, `right` in addition to `below`
+- `predraw init` — create a starter project with `main.json` + `config.json`
+- `predraw watch` — auto-rebuild on file changes (mtime polling, 0.3s debounce)
+- `predraw --version` flag
+- `predraw build --dry-run` — preview output plan without rendering
+- Schemas moved into package — `predraw validate` now works after pip install
+- CI tests Node shim, updated to Node 24
+- JSON Schema updated for all new features
+- Animation format design document (todo/animation-design.md)
+
 ## 0.1.2
 
 - npm dual-publish — installable via `npm i -g predraw` (Node shim delegates to Python)
