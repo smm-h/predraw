@@ -1,0 +1,17 @@
+[project]
+name = "predraw"
+version = "0.1.0"
+description = "Declarative rendering pipeline: JSON in, SVG/PNG/WebP out"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "cairosvg>=2.7",
+    "pillow>=10.0",
+]
+
+[project.scripts]
+predraw = "predraw.cli:main"
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
