@@ -6,8 +6,16 @@ The missing link between your AI and the SVGs you want to make.
 
 ## Install
 
+From PyPI:
+
 ```
 uv tool install predraw
+```
+
+From npm (requires Python 3.11+):
+
+```
+npm i -g predraw
 ```
 
 ## Quick start
@@ -92,6 +100,15 @@ Convert a packed JSON file back into a directory project with separate component
 
 ```
 predraw unpack packed.json -o my-asset/
+```
+
+### validate \<file\> [--schema scene|config]
+
+Validate a scene or config file against the JSON Schema. Auto-detects file type (presence of `"outputs"` key = config, otherwise = scene).
+
+```
+predraw validate main.json
+predraw validate config.json --schema config
 ```
 
 ## Format

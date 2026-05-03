@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.1.2
+
+- npm dual-publish — installable via `npm i -g predraw` (Node shim delegates to Python)
+- `predraw validate` documented in README
+
 ## 0.1.1
 
 - Bounding box calculation for paths — `place` pipeline step now uses real geometry instead of font-size heuristic
