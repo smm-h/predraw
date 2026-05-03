@@ -926,3 +926,53 @@ class TestDryRun:
 
         # No output file should have been created
         assert not (tmp_path / "output.svg").exists()
+
+
+# ─── Gradient PNG rendering test ──────────────────────────────────────────────
+
+
+class TestGradientPng:
+    def test_gradient_renders_to_png(self, tmp_path):
+        """Verify cairosvg renders gradients to a non-trivial PNG."""
+        from predraw.model import Scene, Element, Gradient, GradientStop
+        from predraw.renderer import render_svg
+        from predraw.output import _write_png
+
+        scene = Scene(width=200, height=100, elements=[
+            Element(type="rect", width=200, height=100,
+                    fill=Gradient(type="linear-gradient",
+                                  stops=[GradientStop(0, "#ff0000"), GradientStop(1, "#0000ff")]))
+        ])
+        svg = render_svg(scene)
+        out = str(tmp_path / "gradient.png")
+        _write_png(svg, out)
+        # Verify file exists and is non-trivial (>100 bytes = not blank)
+        assert Path(out).exists()
+        assert Path(out).stat().st_size > 100
+
+
+# ─── Pack round-trip advanced test ────────────────────────────────────────────
+
+
+class TestPackRoundTripAdvanced:
+    def test_stroke_and_gradient_survive_pack(self, tmp_path):
+        """Verify stroke and gradient fields survive pack/unpack round-trip."""
+        import json
+        from predraw.model import Scene, Element, Gradient, GradientStop
+        from predraw.cli import pack_scene, _scene_to_dict
+
+        grad = Gradient(type="linear-gradient", stops=[GradientStop(0, "#ff0000"), GradientStop(1, "#0000ff")])
+        scene = Scene(width=100, height=100, elements=[
+            Element(type="rect", id="box", width=100, height=100,
+                    fill=grad, stroke="#00ff00", stroke_width=3,
+                    stroke_dasharray="5 3")
+        ])
+
+        packed = pack_scene(scene)
+        # Verify fill is a dict (gradient) not a string
+        el = packed["elements"][0]
+        assert isinstance(el["fill"], dict)
+        assert el["fill"]["type"] == "linear-gradient"
+        assert el["stroke"] == "#00ff00"
+        assert el["stroke_width"] == 3
+        assert el["stroke_dasharray"] == "5 3"
