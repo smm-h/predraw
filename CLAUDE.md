@@ -10,6 +10,7 @@ This project uses [rlsbl](https://github.com/smm-h/rlsbl) for release orchestrat
 - Never publish manually — always use `rlsbl release`
 - Requires `NPM_TOKEN` secret on GitHub (for npm projects)
 - Use `rlsbl release --dry-run` to preview a release without making changes
+- Always release with `rlsbl release [patch|minor|major] --registry pypi` to keep pyproject.toml as the version source.
 
 ## Conventions
 

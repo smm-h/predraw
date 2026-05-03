@@ -9,6 +9,7 @@ import sys
 from itertools import groupby
 from pathlib import Path
 
+from . import __version__
 from .loader import load_config, load_scene, resolve_styles
 from .model import Element, Font, Scene, Style, Transform
 from .output import write_outputs
@@ -20,11 +21,13 @@ from .validator import validate_config, validate_scene
 def main():
     """Entry point for the predraw CLI."""
     parser = argparse.ArgumentParser(prog="predraw", description="predraw scene builder")
+    parser.add_argument("--version", "-v", action="version", version=f"predraw {__version__}")
     subparsers = parser.add_subparsers(dest="command")
 
     # -- build --
     build_parser = subparsers.add_parser("build", help="Build scene into output files")
     build_parser.add_argument("path", nargs="?", default=".", help="Project directory or scene file (default: .)")
+    build_parser.add_argument("--dry-run", action="store_true", help="Print build plan without writing files")
 
     # -- pack --
     pack_parser = subparsers.add_parser("pack", help="Pack a scene directory into a single JSON file")
@@ -49,7 +52,7 @@ def main():
 
     try:
         if args.command == "build":
-            _cmd_build(args.path)
+            _cmd_build(args.path, dry_run=args.dry_run)
         elif args.command == "pack":
             _cmd_pack(args.path, args.output)
         elif args.command == "unpack":
@@ -70,7 +73,7 @@ def main():
 # ─── Build ───────────────────────────────────────────────────────────────────
 
 
-def _cmd_build(path: str) -> None:
+def _cmd_build(path: str, *, dry_run: bool = False) -> None:
     """Build all outputs for a scene, grouped by mode to avoid redundant work."""
     scene = load_scene(path)
     config = load_config(path)
@@ -89,6 +92,21 @@ def _cmd_build(path: str) -> None:
         return o.get("mode", "dark")
 
     sorted_outputs = sorted(outputs, key=mode_key)
+
+    if dry_run:
+        # Print the build plan without rendering or writing
+        total_outputs = 0
+        for mode, group in groupby(sorted_outputs, key=mode_key):
+            group_outputs = list(group)
+            total_outputs += len(group_outputs)
+            print(f"Mode: {mode} ({len(group_outputs)} output(s))")
+            for out in group_outputs:
+                fmt = out.get("format", "svg")
+                filename = out.get("filename", f"output.{fmt}")
+                print(f"  {filename} ({fmt})")
+        print(f"\n{total_outputs} output(s) across {len(set(o.get('mode', 'dark') for o in outputs))} mode(s).")
+        print("Dry run — no files written.")
+        return
 
     total_written: list[str] = []
     for mode, group in groupby(sorted_outputs, key=mode_key):

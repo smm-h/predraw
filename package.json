@@ -9,7 +9,7 @@
   "files": [
     "bin/",
     "predraw/",
-    "schema/"
+    "predraw/schema/"
   ],
   "repository": {
     "type": "git",

@@ -31,8 +31,8 @@ def _validate(data: dict, schema: dict) -> list[str]:
 
 
 def _load_schema(name: str) -> dict:
-    """Load a schema file from the schema/ directory at the project root."""
-    schema_dir = Path(__file__).parent.parent / "schema"
+    """Load a schema file from the schema/ directory inside the package."""
+    schema_dir = Path(__file__).parent / "schema"
     schema_path = schema_dir / f"{name}.schema.json"
     with open(schema_path, "r", encoding="utf-8") as f:
         return json.load(f)
