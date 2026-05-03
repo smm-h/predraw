@@ -14,3 +14,4 @@
 - `predraw pack` — convert directory project to single portable JSON file
 - `predraw unpack` — convert packed file back to directory with components
 - JSON Schema for scene and config formats
+- `predraw validate` — validate scene/config files against the JSON Schema
