@@ -70,11 +70,15 @@ def _font_directories() -> list[Path]:
     return [d for d in dirs if d.exists()]
 
 
-def find_font(family: str, weight: int = 400) -> str | None:
+def find_font(family: str, weight: int = 400, project_dir: str | None = None) -> str | None:
     """Find a font file path for the given family and weight.
 
-    Searches system font directories for .ttf/.otf files matching the family
+    Searches font directories for .ttf/.otf files matching the family
     name and weight. Returns the path to the font file, or None if not found.
+
+    Search order:
+    1. {project_dir}/fonts/ (if project_dir is provided and exists)
+    2. System font directories
     """
     # Normalize family name for comparison (lowercase, no spaces/hyphens)
     family_normalized = family.lower().replace(" ", "").replace("-", "")
@@ -82,10 +86,18 @@ def find_font(family: str, weight: int = 400) -> str | None:
     # Build candidate suffixes for the requested weight
     suffixes = _WEIGHT_SUFFIXES.get(weight, ["Regular"])
 
+    # Build search directories: project fonts first, then system
+    search_dirs: list[Path] = []
+    if project_dir:
+        local_fonts = Path(project_dir) / "fonts"
+        if local_fonts.is_dir():
+            search_dirs.append(local_fonts)
+    search_dirs.extend(_font_directories())
+
     # Search all font directories
     candidates: list[tuple[int, str]] = []  # (priority, path)
 
-    for font_dir in _font_directories():
+    for font_dir in search_dirs:
         for path in font_dir.rglob("*"):
             if path.suffix.lower() not in (".ttf", ".otf"):
                 continue
