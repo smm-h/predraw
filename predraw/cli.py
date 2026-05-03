@@ -6,6 +6,7 @@ import argparse
 import copy
 import json
 import sys
+import time
 from itertools import groupby
 from pathlib import Path
 
@@ -39,6 +40,14 @@ def main():
     unpack_parser.add_argument("file", help="Packed JSON file to unpack")
     unpack_parser.add_argument("-o", "--output", default=".", help="Output directory (default: .)")
 
+    # -- init --
+    init_parser = subparsers.add_parser("init", help="Create a starter project in a directory")
+    init_parser.add_argument("path", nargs="?", default=".", help="Directory to initialize (default: .)")
+
+    # -- watch --
+    watch_parser = subparsers.add_parser("watch", help="Watch project files and rebuild on change")
+    watch_parser.add_argument("path", nargs="?", default=".", help="Project directory (default: .)")
+
     # -- validate --
     validate_parser = subparsers.add_parser("validate", help="Validate a scene or config JSON file against its schema")
     validate_parser.add_argument("file", help="JSON file to validate")
@@ -53,6 +62,10 @@ def main():
     try:
         if args.command == "build":
             _cmd_build(args.path, dry_run=args.dry_run)
+        elif args.command == "init":
+            _cmd_init(args.path)
+        elif args.command == "watch":
+            _cmd_watch(args.path)
         elif args.command == "pack":
             _cmd_pack(args.path, args.output)
         elif args.command == "unpack":
@@ -125,6 +138,128 @@ def _cmd_build(path: str, *, dry_run: bool = False) -> None:
         total_written.extend(written)
 
     print(f"\nDone — {len(total_written)} file(s) written.")
+
+
+# ─── Init ───────────────────────────────────────────────────────────────────
+
+
+_STARTER_MAIN = {
+    "width": 800,
+    "height": 400,
+    "styles": {
+        "bg": {"light": "#ffffff", "dark": "#1a1a1a"},
+        "fg": {"light": "#000000", "dark": "#ffffff"},
+    },
+    "elements": [
+        {"type": "background", "fill": "$bg"},
+        {
+            "type": "text",
+            "id": "title",
+            "content": "hello predraw",
+            "x": 400,
+            "y": 220,
+            "anchor": "middle",
+            "fill": "$fg",
+            "font": {"family": "sans-serif", "size": 64, "weight": 700},
+        },
+    ],
+}
+
+_STARTER_CONFIG = {
+    "outputs": [
+        {"format": "svg", "path": "output.svg", "mode": "dark"},
+        {"format": "png", "path": "output.png", "mode": "dark"},
+    ]
+}
+
+
+def _cmd_init(path: str) -> None:
+    """Create a starter predraw project in the given directory."""
+    target = Path(path)
+    main_file = target / "main.json"
+
+    if main_file.exists():
+        print(f"Error: {main_file} already exists", file=sys.stderr)
+        sys.exit(1)
+
+    target.mkdir(parents=True, exist_ok=True)
+
+    main_file.write_text(json.dumps(_STARTER_MAIN, indent=2), encoding="utf-8")
+    config_file = target / "config.json"
+    config_file.write_text(json.dumps(_STARTER_CONFIG, indent=2), encoding="utf-8")
+
+    print(f"Created {main_file}")
+    print(f"Created {config_file}")
+
+
+# ─── Watch ──────────────────────────────────────────────────────────────────
+
+
+def _collect_json_files(project_dir: Path) -> list[Path]:
+    """Collect all .json files in the project directory (recursively)."""
+    return list(project_dir.rglob("*.json"))
+
+
+def _get_mtimes(files: list[Path]) -> dict[Path, float]:
+    """Get mtime for each file, skipping files that disappeared."""
+    mtimes: dict[Path, float] = {}
+    for f in files:
+        try:
+            mtimes[f] = f.stat().st_mtime
+        except OSError:
+            pass
+    return mtimes
+
+
+def _cmd_watch(path: str) -> None:
+    """Watch project files and rebuild on change."""
+    project_dir = Path(path).resolve()
+
+    if not project_dir.is_dir():
+        print(f"Error: {project_dir} is not a directory", file=sys.stderr)
+        sys.exit(1)
+
+    print(f"Watching {project_dir}/ (Ctrl+C to stop)")
+
+    # Initial mtime snapshot
+    files = _collect_json_files(project_dir)
+    prev_mtimes = _get_mtimes(files)
+
+    try:
+        while True:
+            time.sleep(0.5)
+
+            # Rescan files (new files may appear)
+            files = _collect_json_files(project_dir)
+            curr_mtimes = _get_mtimes(files)
+
+            # Detect changes: new files, modified files, deleted files
+            changed = False
+            if set(curr_mtimes.keys()) != set(prev_mtimes.keys()):
+                changed = True
+            else:
+                for f, mtime in curr_mtimes.items():
+                    if prev_mtimes.get(f) != mtime:
+                        changed = True
+                        break
+
+            if changed:
+                # Debounce: wait 0.3s then re-check for further changes
+                time.sleep(0.3)
+                files = _collect_json_files(project_dir)
+                curr_mtimes = _get_mtimes(files)
+
+                # Rebuild
+                try:
+                    _cmd_build(str(project_dir))
+                    n_files = len(curr_mtimes)
+                    print(f"Rebuilt ({n_files} files)")
+                except Exception as e:
+                    print(f"Build error: {e}", file=sys.stderr)
+
+                prev_mtimes = curr_mtimes
+    except KeyboardInterrupt:
+        print("\nStopped.")
 
 
 # ─── Validate ───────────────────────────────────────────────────────────────
