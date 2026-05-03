@@ -189,14 +189,84 @@ def _group(scene: Scene, target_ids: list[str], group_id: str) -> None:
     scene.elements.append(group)
 
 
+def _replace_element(elements: list[Element], element_id: str, replacement: Element) -> bool:
+    """Replace an element by ID in the list, searching recursively into groups."""
+    for i, el in enumerate(elements):
+        if el.id == element_id:
+            elements[i] = replacement
+            return True
+        if el.elements:
+            if _replace_element(el.elements, element_id, replacement):
+                return True
+    return False
+
+
 def _text_to_paths(scene: Scene, target_id: str) -> None:
-    """Convert text to paths (stub — not yet implemented)."""
+    """Convert a text element to a group of path elements using font outlines."""
     if not scene.elements:
         return
 
     element = _find_element(scene.elements, target_id)
-    if element is None:
-        warnings.warn(f"text-to-paths: element '{target_id}' not found, skipping")
+    if element is None or element.type != "text":
+        warnings.warn(f"text-to-paths: element '{target_id}' not found or not text")
         return
 
-    warnings.warn("text-to-paths not yet implemented, rendering as text")
+    from .fonts import find_font, get_glyph_paths
+
+    font_family = element.font.family if element.font else "sans-serif"
+    font_weight = element.font.weight if element.font else 400
+    font_size = element.font.size if element.font else 16
+
+    font_path = find_font(font_family, font_weight)
+    if font_path is None:
+        warnings.warn(f"text-to-paths: font '{font_family}' not found, keeping as text")
+        return
+
+    glyph_data = get_glyph_paths(
+        font_path, element.content or "", font_size, element.letter_spacing
+    )
+
+    # Build path elements for each character
+    paths: list[Element] = []
+    for i, glyph in enumerate(glyph_data):
+        # Skip empty paths (e.g. spaces)
+        if not glyph["d"]:
+            continue
+
+        # Determine fill and opacity for this character
+        fill = element.fill
+        opacity = element.opacity
+        if element.char_styles:
+            for cs in element.char_styles:
+                if glyph["char"] in cs.chars:
+                    if cs.fill:
+                        fill = cs.fill
+                    opacity = cs.opacity
+                    break
+
+        path = Element(
+            type="path",
+            id=f"{element.id}-{i}" if element.id else None,
+            d=glyph["d"],
+            fill=fill,
+            opacity=opacity,
+        )
+        paths.append(path)
+
+    # Compute anchor-based x offset
+    total_width = sum(g["advance"] for g in glyph_data)
+    x_offset = element.x
+    if element.anchor == "middle":
+        x_offset = element.x - total_width / 2
+    elif element.anchor == "end":
+        x_offset = element.x - total_width
+
+    # Create a group replacing the text element, positioned at (x, y)
+    group = Element(
+        type="group",
+        id=element.id,
+        elements=paths,
+        transform=Transform(translate=(x_offset, element.y)),
+    )
+
+    _replace_element(scene.elements, target_id, group)

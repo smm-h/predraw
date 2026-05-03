@@ -7,6 +7,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "cairosvg>=2.7",
+    "fonttools>=4.62.1",
     "pillow>=10.0",
 ]
 
