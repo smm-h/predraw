@@ -19,4 +19,4 @@ jobs:
     - run: uv python install ${{ matrix.python-version }}
     - run: uv sync
     - run: uv run python -c "import predraw"
-    - run: node bin/cli.js --help
+    - run: . .venv/bin/activate && node bin/cli.js --help
