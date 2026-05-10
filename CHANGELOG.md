@@ -2,6 +2,8 @@
 
 ## 0.2.1
 
+Internal improvements.
+
 ## 0.2.0
 
 - Stroke support (`stroke`, `strokeWidth`, `strokeDasharray`, `strokeLinecap`, `strokeLinejoin`, `strokeOpacity`)
