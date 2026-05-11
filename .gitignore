@@ -22,3 +22,7 @@ coverage/
 .env
 .env.local
 *.local-only
+
+# selfdoc / Cloudflare
+docs/_build/
+.wrangler/
