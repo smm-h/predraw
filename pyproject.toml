@@ -10,7 +10,11 @@ dependencies = [
     "fonttools>=4.62.1",
     "jsonschema>=4.20",
     "pillow>=10.0",
+    "strictcli>=0.2.0",
 ]
+
+[tool.uv.sources]
+strictcli = { path = "../strictcli/python" }
 
 [project.scripts]
 predraw = "predraw.cli:main"

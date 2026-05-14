@@ -1,14 +1,15 @@
-"""CLI entry point for predraw — argparse-based with build/pack/unpack subcommands."""
+"""CLI entry point for predraw — strictcli-based with build/pack/unpack subcommands."""
 
 from __future__ import annotations
 
-import argparse
 import copy
 import json
 import sys
 import time
 from itertools import groupby
 from pathlib import Path
+
+import strictcli
 
 from . import __version__
 from .loader import load_config, load_scene, resolve_styles
@@ -18,74 +19,25 @@ from .pipeline import execute_pipeline
 from .renderer import render_svg
 from .validator import validate_config, validate_scene
 
+app = strictcli.App(name="predraw", version=__version__, help="predraw scene builder")
+
 
 def main():
     """Entry point for the predraw CLI."""
-    parser = argparse.ArgumentParser(prog="predraw", description="predraw scene builder")
-    parser.add_argument("--version", "-v", action="version", version=f"predraw {__version__}")
-    subparsers = parser.add_subparsers(dest="command")
-
-    # -- build --
-    build_parser = subparsers.add_parser("build", help="Build scene into output files")
-    build_parser.add_argument("path", nargs="?", default=".", help="Project directory or scene file (default: .)")
-    build_parser.add_argument("--dry-run", action="store_true", help="Print build plan without writing files")
-
-    # -- pack --
-    pack_parser = subparsers.add_parser("pack", help="Pack a scene directory into a single JSON file")
-    pack_parser.add_argument("path", nargs="?", default=".", help="Project directory or scene file (default: .)")
-    pack_parser.add_argument("-o", "--output", default="packed.json", help="Output file path (default: packed.json)")
-
-    # -- unpack --
-    unpack_parser = subparsers.add_parser("unpack", help="Unpack a packed JSON file into a project directory")
-    unpack_parser.add_argument("file", help="Packed JSON file to unpack")
-    unpack_parser.add_argument("-o", "--output", default=".", help="Output directory (default: .)")
-
-    # -- init --
-    init_parser = subparsers.add_parser("init", help="Create a starter project in a directory")
-    init_parser.add_argument("path", nargs="?", default=".", help="Directory to initialize (default: .)")
-
-    # -- watch --
-    watch_parser = subparsers.add_parser("watch", help="Watch project files and rebuild on change")
-    watch_parser.add_argument("path", nargs="?", default=".", help="Project directory (default: .)")
-
-    # -- validate --
-    validate_parser = subparsers.add_parser("validate", help="Validate a scene or config JSON file against its schema")
-    validate_parser.add_argument("file", help="JSON file to validate")
-    validate_parser.add_argument("--schema", choices=["scene", "config"], default=None, help="Force schema type (auto-detected if omitted)")
-
-    args = parser.parse_args()
-
-    if args.command is None:
-        parser.print_help()
-        sys.exit(0)
-
-    try:
-        if args.command == "build":
-            _cmd_build(args.path, dry_run=args.dry_run)
-        elif args.command == "init":
-            _cmd_init(args.path)
-        elif args.command == "watch":
-            _cmd_watch(args.path)
-        elif args.command == "pack":
-            _cmd_pack(args.path, args.output)
-        elif args.command == "unpack":
-            _cmd_unpack(args.file, args.output)
-        elif args.command == "validate":
-            _cmd_validate(args.file, args.schema)
-    except FileNotFoundError as e:
-        print(f"Error: {e}", file=sys.stderr)
-        sys.exit(1)
-    except json.JSONDecodeError as e:
-        print(f"Error: invalid JSON — {e}", file=sys.stderr)
-        sys.exit(1)
-    except Exception as e:
-        print(f"Error: {e}", file=sys.stderr)
-        sys.exit(1)
+    app.run()
 
 
 # ─── Build ───────────────────────────────────────────────────────────────────
 
 
+@app.command(
+    "build",
+    help="Build scene into output files",
+    args=[
+        strictcli.Arg(name="path", help="Project directory or scene file (default: .)", required=False, default="."),
+    ],
+)
+@strictcli.flag("dry-run", type=bool, help="Print build plan without writing files")
 def _cmd_build(path: str, *, dry_run: bool = False) -> None:
     """Build all outputs for a scene, grouped by mode to avoid redundant work."""
     scene = load_scene(path)
@@ -140,6 +92,52 @@ def _cmd_build(path: str, *, dry_run: bool = False) -> None:
     print(f"\nDone — {len(total_written)} file(s) written.")
 
 
+# ─── Pack ────────────────────────────────────────────────────────────────────
+
+
+@app.command(
+    "pack",
+    help="Pack a scene directory into a single JSON file",
+    args=[
+        strictcli.Arg(name="path", help="Project directory or scene file (default: .)", required=False, default="."),
+    ],
+)
+@strictcli.flag("output", short="o", type=str, default="packed.json", help="Output file path (default: packed.json)")
+def _cmd_pack(path: str, *, output: str) -> None:
+    """Pack a scene directory into a single self-contained JSON file."""
+    scene = load_scene(path)
+    packed = pack_scene(scene)
+
+    out_path = Path(output)
+    out_path.parent.mkdir(parents=True, exist_ok=True)
+    out_path.write_text(json.dumps(packed, indent=2), encoding="utf-8")
+    print(f"Packed scene written to: {out_path}")
+
+
+# ─── Unpack ──────────────────────────────────────────────────────────────────
+
+
+@app.command(
+    "unpack",
+    help="Unpack a packed JSON file into a project directory",
+    args=[
+        strictcli.Arg(name="file", help="Packed JSON file to unpack"),
+    ],
+)
+@strictcli.flag("output", short="o", type=str, default=".", help="Output directory (default: .)")
+def _cmd_unpack(file: str, *, output: str) -> None:
+    """Unpack a packed JSON file into a project directory."""
+    file_path = Path(file)
+    if not file_path.exists():
+        raise FileNotFoundError(f"File not found: {file}")
+
+    with open(file_path, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    scene = load_scene(str(file_path))
+    unpack_scene(scene, output)
+
+
 # ─── Init ───────────────────────────────────────────────────────────────────
 
 
@@ -173,6 +171,13 @@ _STARTER_CONFIG = {
 }
 
 
+@app.command(
+    "init",
+    help="Create a starter project in a directory",
+    args=[
+        strictcli.Arg(name="path", help="Directory to initialize (default: .)", required=False, default="."),
+    ],
+)
 def _cmd_init(path: str) -> None:
     """Create a starter predraw project in the given directory."""
     target = Path(path)
@@ -221,6 +226,13 @@ def _detect_changes(prev_mtimes: dict[Path, float], curr_mtimes: dict[Path, floa
     return False
 
 
+@app.command(
+    "watch",
+    help="Watch project files and rebuild on change",
+    args=[
+        strictcli.Arg(name="path", help="Project directory (default: .)", required=False, default="."),
+    ],
+)
 def _cmd_watch(path: str) -> None:
     """Watch project files and rebuild on change."""
     project_dir = Path(path).resolve()
@@ -265,7 +277,15 @@ def _cmd_watch(path: str) -> None:
 # ─── Validate ───────────────────────────────────────────────────────────────
 
 
-def _cmd_validate(file: str, schema_type: str | None) -> None:
+@app.command(
+    "validate",
+    help="Validate a scene or config JSON file against its schema",
+    args=[
+        strictcli.Arg(name="file", help="JSON file to validate"),
+    ],
+)
+@strictcli.flag("schema", type=str, default="", choices=["scene", "config", ""], help="Force schema type (auto-detected if omitted)")
+def _cmd_validate(file: str, *, schema: str) -> None:
     """Validate a JSON file against its scene or config schema."""
     file_path = Path(file)
     if not file_path.exists():
@@ -275,8 +295,7 @@ def _cmd_validate(file: str, schema_type: str | None) -> None:
         data = json.load(f)
 
     # Auto-detect schema type if not forced: presence of "outputs" key means config
-    if schema_type is None:
-        schema_type = "config" if "outputs" in data else "scene"
+    schema_type = schema if schema else ("config" if "outputs" in data else "scene")
 
     if schema_type == "config":
         errors = validate_config(data)
@@ -292,20 +311,6 @@ def _cmd_validate(file: str, schema_type: str | None) -> None:
         sys.exit(1)
     else:
         print(f"Valid {label} file")
-
-
-# ─── Pack ────────────────────────────────────────────────────────────────────
-
-
-def _cmd_pack(path: str, output_file: str) -> None:
-    """Pack a scene directory into a single self-contained JSON file."""
-    scene = load_scene(path)
-    packed = pack_scene(scene)
-
-    out_path = Path(output_file)
-    out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(json.dumps(packed, indent=2), encoding="utf-8")
-    print(f"Packed scene written to: {out_path}")
 
 
 def pack_scene(scene: Scene) -> dict:
@@ -337,22 +342,6 @@ def _assign_ids(elements: list[dict], counter: list[int] | None = None) -> None:
         # Recurse into child elements
         if "elements" in el:
             _assign_ids(el["elements"], counter)
-
-
-# ─── Unpack ──────────────────────────────────────────────────────────────────
-
-
-def _cmd_unpack(file: str, output_dir: str) -> None:
-    """Unpack a packed JSON file into a project directory."""
-    file_path = Path(file)
-    if not file_path.exists():
-        raise FileNotFoundError(f"File not found: {file}")
-
-    with open(file_path, "r", encoding="utf-8") as f:
-        data = json.load(f)
-
-    scene = load_scene(str(file_path))
-    unpack_scene(scene, output_dir)
 
 
 def unpack_scene(scene: Scene, output_dir: str) -> None:
