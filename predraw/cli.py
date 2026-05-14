@@ -46,7 +46,7 @@ def _cmd_build(path: str, *, dry_run: bool = False) -> None:
 
     if not outputs:
         print("No outputs defined in config.")
-        return
+        return 0
 
     # Resolve output directory from path
     p = Path(path)
@@ -71,7 +71,7 @@ def _cmd_build(path: str, *, dry_run: bool = False) -> None:
                 print(f"  {filename} ({fmt})")
         print(f"\n{total_outputs} output(s) across {len(set(o.get('mode', 'dark') for o in outputs))} mode(s).")
         print("Dry run — no files written.")
-        return
+        return 0
 
     total_written: list[str] = []
     for mode, group in groupby(sorted_outputs, key=mode_key):
@@ -90,6 +90,7 @@ def _cmd_build(path: str, *, dry_run: bool = False) -> None:
         total_written.extend(written)
 
     print(f"\nDone — {len(total_written)} file(s) written.")
+    return 0
 
 
 # ─── Pack ────────────────────────────────────────────────────────────────────
@@ -112,6 +113,7 @@ def _cmd_pack(path: str, *, output: str) -> None:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(packed, indent=2), encoding="utf-8")
     print(f"Packed scene written to: {out_path}")
+    return 0
 
 
 # ─── Unpack ──────────────────────────────────────────────────────────────────
@@ -136,6 +138,7 @@ def _cmd_unpack(file: str, *, output: str) -> None:
 
     scene = load_scene(str(file_path))
     unpack_scene(scene, output)
+    return 0
 
 
 # ─── Init ───────────────────────────────────────────────────────────────────
@@ -195,6 +198,7 @@ def _cmd_init(path: str) -> None:
 
     print(f"Created {main_file}")
     print(f"Created {config_file}")
+    return 0
 
 
 # ─── Watch ──────────────────────────────────────────────────────────────────
@@ -272,6 +276,7 @@ def _cmd_watch(path: str) -> None:
                 prev_mtimes = curr_mtimes
     except KeyboardInterrupt:
         print("\nStopped.")
+    return 0
 
 
 # ─── Validate ───────────────────────────────────────────────────────────────
@@ -311,6 +316,7 @@ def _cmd_validate(file: str, *, schema: str) -> None:
         sys.exit(1)
     else:
         print(f"Valid {label} file")
+    return 0
 
 
 def pack_scene(scene: Scene) -> dict:
