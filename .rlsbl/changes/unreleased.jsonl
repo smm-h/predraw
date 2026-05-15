@@ -4,3 +4,4 @@
 {"commits":["f720e8c38444c781edd3430c2359c49fb768977f","5e8f631b4a5e649166829e7c25c5fd0852c35fcd"],"user_facing":false,"description":"Clean changelog and add placeholders for empty versions","type":"fix"}
 {"commits":["918cfa3b0964c7716d17b60006279d5d70892b5b"],"user_facing":true,"description":"Fix pack command to use camelCase for stroke properties; watch excludes local-only files","type":"fix"}
 {"commits":["aad9adfb528f3e56370b7a45e4a69f0169b27dd3"],"user_facing":false,"description":"Update uv.lock","type":"feature"}
+{"commits":["a391e102827a6534d84b26d04c13ea222f58bf59","23adcddedc5b9a4560c5a078900d370ee0345385"],"user_facing":false}
