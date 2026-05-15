@@ -8,11 +8,7 @@ This project uses [rlsbl](https://github.com/smm-h/rlsbl) for release orchestrat
 - Run `rlsbl release [patch|minor|major]` to bump version and create a GitHub Release
 - CI handles publishing automatically via the publish workflow
 - Never publish manually — always use `rlsbl release`
-<<<<<<< /home/m/Projects/predraw/tmpthd8ts5m.ours
-- Requires `NPM_TOKEN` secret on GitHub (for npm projects)
-=======
-- Requires NPM_TOKEN secret on GitHub (Settings > Secrets > Actions)
->>>>>>> /home/m/Projects/predraw/tmpja8cwyqh.theirs
+- Requires `NPM_TOKEN` secret on GitHub (Settings > Secrets > Actions)
 - Use `rlsbl release --dry-run` to preview a release without making changes
 - Always release with `rlsbl release [patch|minor|major] --registry pypi` to keep pyproject.toml as the version source.
 

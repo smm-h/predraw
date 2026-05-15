@@ -1,0 +1,8 @@
+{"commits":["ded7b8eea12458a74116824392254c83eeccf6ba","f7182d58cc5b4d05ceeb526e8da43bf7de6c5fb8"],"user_facing":true,"description":"Place directions \u2014 `place` pipeline step now supports `above`, `left`, `right` in addition to `below`","type":"feature"}
+{"commits":["1b7031ace981d735c6fe728537855468d88f8cd4"],"user_facing":true,"description":"Schemas moved into package \u2014 `predraw validate` now works after pip install","type":"feature"}
+{"commits":["6e848108d0c9cea6533c8dc453be80ffdc85226b"],"user_facing":true,"description":"Stroke support (`stroke`, `strokeWidth`, `strokeDasharray`, `strokeLinecap`, `strokeLinejoin`, `strokeOpacity`)","type":"feature"}
+{"commits":["f09e5fd84b3a84c45cb8d0589f683d2bd303ed5f"],"user_facing":true,"description":"Gradient fills \u2014 `linear-gradient` and `radial-gradient` as fill/stroke objects, rendered as SVG `<defs>`","type":"feature"}
+{"commits":["ebba32aac7583ae59e2581550a18ae60a2e753fe"],"user_facing":true,"description":"`predraw init` \u2014 create a starter project with `main.json` + `config.json`","type":"feature"}
+{"commits":["d1a0a4a85f4ca7fc0638cc180ae1104e5866bced"],"user_facing":true,"description":"`predraw watch` \u2014 auto-rebuild on file changes (mtime polling, 0.3s debounce)","type":"feature"}
+{"commits":["cf1e231514e77569955f02af1a5778f595449517"],"user_facing":true,"description":"`predraw --version` flag","type":"feature"}
+{"commits":["8220a4336e4e49ffd4efcb28dc62c67910836519"],"user_facing":true,"description":"`predraw build --dry-run` \u2014 preview output plan without rendering","type":"feature"}

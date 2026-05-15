@@ -7,17 +7,14 @@ permissions:
   id-token: write
 
 jobs:
-<<<<<<< /home/m/Projects/predraw/tmpkbt2vdiy.ours
   pypi:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v6
-    - uses: astral-sh/setup-uv@v7
-    - run: uv build
-    - uses: pypa/gh-action-pypi-publish@release/v1
+      - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v7
+      - run: uv build
+      - uses: pypa/gh-action-pypi-publish@release/v1
 
-  npm:
-=======
   npm:
     runs-on: ubuntu-latest
     steps:
@@ -29,16 +26,3 @@ jobs:
       - run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
-  pypi:
->>>>>>> /home/m/Projects/predraw/tmpwi8ux0en.theirs
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v6
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '24'
-        registry-url: 'https://registry.npmjs.org'
-    - run: npm publish
-      env:
-        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,0 +1,4 @@
+{"commits":["028d021f37759e7a07620379761d753a8351ccdd"],"user_facing":true,"description":"Bounding box calculation for paths \u2014 `place` pipeline step now uses real geometry instead of font-size heuristic","type":"feature"}
+{"commits":["f7e44b8169edeecab8310cb7d5fa6672ea9e5379"],"user_facing":true,"description":"Local `fonts/` directory support \u2014 project-local fonts searched before system fonts for reproducible rendering","type":"feature"}
+{"commits":["52136ed8c6d05bb2536e557f384f5a2888a98418"],"user_facing":true,"description":"Component property overrides \u2014 `use` elements can override `fill` (replaces) and `opacity` (multiplies) on referenced components","type":"feature"}
+{"commits":["54bd6e60ac66e8bde8ce1d694bbb91839f3aac9d","7a5f3b4172aecf21af9a2c960e6b7f6d83d0ac63"],"user_facing":false}

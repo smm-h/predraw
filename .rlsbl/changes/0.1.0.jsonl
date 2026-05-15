@@ -1,0 +1,14 @@
+{"commits":["8644d5706cc05d8c2803ed7dbf3f8b0fa34cad1f"],"user_facing":true,"description":"Component system: `imports` + `use` with property overrides (fill, opacity cascade)","type":"feature"}
+{"commits":["72fd2ff8858e69cacf019eb41a3c5f73ca29531e"],"user_facing":true,"description":"`text-to-paths` pipeline step via fonttools (converts text to SVG path outlines)","type":"feature"}
+{"commits":["3a0f6cb7a1b54273a68d6f494f88ca3e84f7eb10"],"user_facing":true,"description":"Output formats: SVG, PNG (via cairosvg), WebP (via Pillow)","type":"feature"}
+{"commits":["c8e783aebccc7a44511ac0a0814fc71fb7086d54"],"user_facing":true,"description":"`predraw unpack` \u2014 convert packed file back to directory with components","type":"feature"}
+{"commits":["4f5b62dbc9571a6d5e1aaf75e36666ef62660c88"],"user_facing":true,"description":"JSON Schema for scene and config formats","type":"feature"}
+{"commits":["905415919f30a26e48deb257b46dcffbf24dcc25"],"user_facing":true,"description":"`predraw validate` \u2014 validate scene/config files against the JSON Schema","type":"feature"}
+{"commits":["92e7397c96d74ed7f3ea327b7f68dca36614e14d"],"user_facing":true,"description":"Declarative JSON format for describing visual assets (rect, path, text, group, background)","type":"feature"}
+{"commits":["742f5bd0d78c7c1fc2a8fab2d9712a599c74d42c"],"user_facing":true,"description":"`$style` tokens with light/dark mode variants, resolved at render time","type":"feature"}
+{"commits":["893fccc9fd5c97fdad77d896a6380c7a1689c31b"],"user_facing":true,"description":"Per-character text styling via `charStyles`","type":"feature"}
+{"commits":["d48e42e9afc9c098a7336f6dedc783221fd8e561"],"user_facing":true,"description":"Pipeline steps: `center`, `place`, `group`, `text-to-paths`","type":"feature"}
+{"commits":["311a864174374485bf4caa1cf41044452bf1995b"],"user_facing":true,"description":"Config-driven outputs with per-output mode selection (`config.json`)","type":"feature"}
+{"commits":["63aaee1a8f2cc69dc49d28377ac522c0ce2f5925"],"user_facing":true,"description":"`predraw build` \u2014 render all outputs from a project directory or single file","type":"feature"}
+{"commits":["2ec263dd112950eb6884f32b481f42ec75ee80b0"],"user_facing":true,"description":"`predraw pack` \u2014 convert directory project to single portable JSON file","type":"feature"}
+{"commits":["9e16ba7398a7fce65877c6e2a827f8d3d4ddcd26","aab3fd047e9584016cee1f6b9705bfcf83698ad2","4a1d9534d11ab2498529df0d5429dbbdbd7b68ab","6474201fbffb1964b0e2981beff6172a169ab466"],"user_facing":false}

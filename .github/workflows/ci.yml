@@ -12,22 +12,12 @@ jobs:
         # engines.node: >= 18
         node-version: [20, 22, 24]
     steps:
-<<<<<<< /home/m/Projects/predraw/tmpmitqu268.ours
-    - uses: actions/checkout@v6
-    - uses: astral-sh/setup-uv@v7
-    - uses: actions/setup-node@v6
-      with:
-        node-version: '24'
-    - run: uv python install ${{ matrix.python-version }}
-    - run: uv sync
-    - run: uv run python -c "import predraw"
-    - run: . .venv/bin/activate && node bin/cli.js --help
-=======
       - uses: actions/checkout@v6
+      - uses: astral-sh/setup-uv@v7
       - uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
-      - run: npm ci
-      - run: npm test --if-present
-      - run: npm audit --audit-level=moderate || true
->>>>>>> /home/m/Projects/predraw/tmphij96k5t.theirs
+      - run: uv python install
+      - run: uv sync
+      - run: uv run python -c "import predraw"
+      - run: . .venv/bin/activate && node bin/cli.js --help

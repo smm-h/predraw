@@ -18,6 +18,7 @@ coverage/
 *.egg-info/
 .rlsbl-notes-*.tmp
 .rlsbl/lock
+.rlsbl/changes/.validated
 .credentials.json
 .*-cache.json
 .env
