@@ -1,0 +1,6 @@
+{"commits":["9cd9d8a03d59da9e6bb2dcbf8edb62e0775c97be","eedd649a49a212bba7886ac66f909c8055ce44f1"],"user_facing":false,"description":"Migrate to rlsbl JSONL changelog system","type":"feature"}
+{"commits":["ca49ad67c33648b28580ff742d4a0ca75ad7d437","620bcb13e37bef11b5650aca19d94db5ddc4e04a"],"user_facing":false,"description":"Migrate CLI from argparse to strictcli","type":"feature"}
+{"commits":["ab32117d7a57936ca862a37915c111beb264221e","fef5248598347c928700ef4682d20862ec5b0b7e","f191615cdc0c8fe97b78bfd9dc24fcc0f4881883"],"user_facing":false,"description":"Set up selfdoc documentation site with Cloudflare Pages deployment","type":"feature"}
+{"commits":["f720e8c38444c781edd3430c2359c49fb768977f","5e8f631b4a5e649166829e7c25c5fd0852c35fcd"],"user_facing":false,"description":"Clean changelog and add placeholders for empty versions","type":"fix"}
+{"commits":["918cfa3b0964c7716d17b60006279d5d70892b5b"],"user_facing":true,"description":"Fix pack command to use camelCase for stroke properties; watch excludes local-only files","type":"fix"}
+{"commits":["aad9adfb528f3e56370b7a45e4a69f0169b27dd3"],"user_facing":false,"description":"Update uv.lock","type":"feature"}
