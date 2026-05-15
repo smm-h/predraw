@@ -9,8 +9,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.12", "3.13", "3.14"]
+        # engines.node: >= 18
+        node-version: [20, 22, 24]
     steps:
+<<<<<<< /home/m/Projects/predraw/tmpmitqu268.ours
     - uses: actions/checkout@v6
     - uses: astral-sh/setup-uv@v7
     - uses: actions/setup-node@v6
@@ -20,3 +22,12 @@ jobs:
     - run: uv sync
     - run: uv run python -c "import predraw"
     - run: . .venv/bin/activate && node bin/cli.js --help
+=======
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm ci
+      - run: npm test --if-present
+      - run: npm audit --audit-level=moderate || true
+>>>>>>> /home/m/Projects/predraw/tmphij96k5t.theirs

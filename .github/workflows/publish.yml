@@ -7,6 +7,7 @@ permissions:
   id-token: write
 
 jobs:
+<<<<<<< /home/m/Projects/predraw/tmpkbt2vdiy.ours
   pypi:
     runs-on: ubuntu-latest
     steps:
@@ -16,6 +17,21 @@ jobs:
     - uses: pypa/gh-action-pypi-publish@release/v1
 
   npm:
+=======
+  npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          registry-url: https://registry.npmjs.org
+      - run: npm publish --provenance --access public
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  pypi:
+>>>>>>> /home/m/Projects/predraw/tmpwi8ux0en.theirs
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v6

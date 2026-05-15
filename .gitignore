@@ -17,6 +17,7 @@ node_modules/
 coverage/
 *.egg-info/
 .rlsbl-notes-*.tmp
+.rlsbl/lock
 .credentials.json
 .*-cache.json
 .env
