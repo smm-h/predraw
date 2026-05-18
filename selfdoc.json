@@ -1,4 +1,5 @@
 {
+  "base_url": "https://predraw.smmh.dev",
   "language": "python",
   "source": ["predraw/"],
   "deploy": {
