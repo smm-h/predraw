@@ -13,9 +13,6 @@ dependencies = [
     "strictcli",
 ]
 
-[tool.uv.sources]
-strictcli = { path = "../strictcli/python" }
-
 [project.scripts]
 predraw = "predraw.cli:main"
 
