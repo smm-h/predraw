@@ -7,6 +7,9 @@ set -euo pipefail
 
 echo "Running pre-release checks..."
 
+echo "  Updating CLI schema..."
+uv run predraw --dump-schema
+
 if [ -f go.mod ]; then
   echo "Detected Go project"
   go vet ./...
