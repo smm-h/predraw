@@ -1,0 +1,152 @@
+{
+  "name": "predraw",
+  "version": "0.2.1",
+  "help": "predraw scene builder",
+  "env_prefix": null,
+  "config": false,
+  "global_flags": [],
+  "commands": {
+    "build": {
+      "name": "build",
+      "help": "Build scene into output files",
+      "flags": [
+        {
+          "name": "dry-run",
+          "type": "bool",
+          "help": "Print build plan without writing files",
+          "short": null,
+          "default": false,
+          "env": null,
+          "choices": null,
+          "repeatable": false,
+          "negatable": true,
+          "hidden": false
+        }
+      ],
+      "args": [
+        {
+          "name": "path",
+          "help": "Project directory or scene file (default: .)",
+          "required": false,
+          "variadic": false
+        }
+      ],
+      "passthrough": false
+    },
+    "pack": {
+      "name": "pack",
+      "help": "Pack a scene directory into a single JSON file",
+      "flags": [
+        {
+          "name": "output",
+          "type": "str",
+          "help": "Output file path (default: packed.json)",
+          "short": "o",
+          "default": "packed.json",
+          "env": null,
+          "choices": null,
+          "repeatable": false,
+          "negatable": null,
+          "hidden": false
+        }
+      ],
+      "args": [
+        {
+          "name": "path",
+          "help": "Project directory or scene file (default: .)",
+          "required": false,
+          "variadic": false
+        }
+      ],
+      "passthrough": false
+    },
+    "unpack": {
+      "name": "unpack",
+      "help": "Unpack a packed JSON file into a project directory",
+      "flags": [
+        {
+          "name": "output",
+          "type": "str",
+          "help": "Output directory (default: .)",
+          "short": "o",
+          "default": ".",
+          "env": null,
+          "choices": null,
+          "repeatable": false,
+          "negatable": null,
+          "hidden": false
+        }
+      ],
+      "args": [
+        {
+          "name": "file",
+          "help": "Packed JSON file to unpack",
+          "required": true,
+          "variadic": false
+        }
+      ],
+      "passthrough": false
+    },
+    "init": {
+      "name": "init",
+      "help": "Create a starter project in a directory",
+      "flags": [],
+      "args": [
+        {
+          "name": "path",
+          "help": "Directory to initialize (default: .)",
+          "required": false,
+          "variadic": false
+        }
+      ],
+      "passthrough": false
+    },
+    "watch": {
+      "name": "watch",
+      "help": "Watch project files and rebuild on change",
+      "flags": [],
+      "args": [
+        {
+          "name": "path",
+          "help": "Project directory (default: .)",
+          "required": false,
+          "variadic": false
+        }
+      ],
+      "passthrough": false
+    },
+    "validate": {
+      "name": "validate",
+      "help": "Validate a scene or config JSON file against its schema",
+      "flags": [
+        {
+          "name": "schema",
+          "type": "str",
+          "help": "Force schema type (auto-detected if omitted)",
+          "short": null,
+          "default": "",
+          "env": null,
+          "choices": [
+            "scene",
+            "config",
+            ""
+          ],
+          "repeatable": false,
+          "negatable": null,
+          "hidden": false
+        }
+      ],
+      "args": [
+        {
+          "name": "file",
+          "help": "JSON file to validate",
+          "required": true,
+          "variadic": false
+        }
+      ],
+      "passthrough": false
+    }
+  },
+  "groups": {},
+  "deprecated": {}
+}
