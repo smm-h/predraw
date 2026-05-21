@@ -10,14 +10,11 @@ dependencies = [
     "fonttools>=4.62.1",
     "jsonschema>=4.20",
     "pillow>=10.0",
-    "strictcli",
+    "strictcli>=0.8.0",
 ]
 
 [project.scripts]
 predraw = "predraw.cli:main"
-
-[tool.uv.sources]
-strictcli = { path = "../strictcli/python", editable = true }
 
 [build-system]
 requires = ["hatchling"]
