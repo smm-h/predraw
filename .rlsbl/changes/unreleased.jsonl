@@ -8,3 +8,4 @@
 {"commits":["440b970d3b8cd53d3140de30cc0127038a7af309","a391e102827a6534d84b26d04c13ea222f58bf59","5e8f631b4a5e649166829e7c25c5fd0852c35fcd","f720e8c38444c781edd3430c2359c49fb768977f"],"user_facing":false}
 {"commits":["e0fc15978b8cb80f6797556743f55b539dcbb262"],"user_facing":false}
 {"commits":["48b3dce43565ba6bb4f2d1f69683be6f3892ee9e"],"user_facing":true,"description":"**CI fix.** Resolved dependency resolution failure by removing local path override for strictcli.","type":"fix"}
+{"commits":["02a9bb068a4c937449ea5fe60c2f4d88c410e7d0","0d119da1f5261bc28c682e7dfa18aa58b365abe7","0d17904cf71047ffffe88a93b898d42c5b6fe680","1276de00bf4136e8c11ac910bf93868d0c87ae73","34a57c1b227f898e321744e5dcdc6d3d5995011d"],"user_facing":false}
