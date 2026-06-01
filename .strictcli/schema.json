@@ -1,10 +1,41 @@
 {
+  "defaults": {
+    "app": {
+      "env_prefix": null,
+      "config": false,
+      "global_flags": [],
+      "commands": {},
+      "groups": {},
+      "deprecated": {}
+    },
+    "flag": {
+      "short": null,
+      "default": null,
+      "env": null,
+      "choices": null,
+      "repeatable": false,
+      "negatable": null,
+      "hidden": false
+    },
+    "arg": {
+      "required": true,
+      "variadic": false
+    },
+    "command": {
+      "passthrough": false,
+      "flags": [],
+      "args": []
+    },
+    "group": {
+      "commands": {},
+      "groups": {},
+      "deprecated": {}
+    }
+  },
+  "project_id": "predraw",
   "name": "predraw",
   "version": "0.2.1",
   "help": "predraw scene builder",
-  "env_prefix": null,
-  "config": false,
-  "global_flags": [],
   "commands": {
     "build": {
       "name": "build",
@@ -14,24 +45,17 @@
           "name": "dry-run",
           "type": "bool",
           "help": "Print build plan without writing files",
-          "short": null,
           "default": false,
-          "env": null,
-          "choices": null,
-          "repeatable": false,
-          "negatable": true,
-          "hidden": false
+          "negatable": true
         }
       ],
       "args": [
         {
           "name": "path",
           "help": "Project directory or scene file (default: .)",
-          "required": false,
-          "variadic": false
+          "required": false
         }
-      ],
-      "passthrough": false
+      ]
     },
     "pack": {
       "name": "pack",
@@ -42,23 +66,16 @@
           "type": "str",
           "help": "Output file path (default: packed.json)",
           "short": "o",
-          "default": "packed.json",
-          "env": null,
-          "choices": null,
-          "repeatable": false,
-          "negatable": null,
-          "hidden": false
+          "default": "packed.json"
         }
       ],
       "args": [
         {
           "name": "path",
           "help": "Project directory or scene file (default: .)",
-          "required": false,
-          "variadic": false
+          "required": false
         }
-      ],
-      "passthrough": false
+      ]
     },
     "unpack": {
       "name": "unpack",
@@ -69,51 +86,37 @@
           "type": "str",
           "help": "Output directory (default: .)",
           "short": "o",
-          "default": ".",
-          "env": null,
-          "choices": null,
-          "repeatable": false,
-          "negatable": null,
-          "hidden": false
+          "default": "."
         }
       ],
       "args": [
         {
           "name": "file",
-          "help": "Packed JSON file to unpack",
-          "required": true,
-          "variadic": false
+          "help": "Packed JSON file to unpack"
         }
-      ],
-      "passthrough": false
+      ]
     },
     "init": {
       "name": "init",
       "help": "Create a starter project in a directory",
-      "flags": [],
       "args": [
         {
           "name": "path",
           "help": "Directory to initialize (default: .)",
-          "required": false,
-          "variadic": false
+          "required": false
         }
-      ],
-      "passthrough": false
+      ]
     },
     "watch": {
       "name": "watch",
       "help": "Watch project files and rebuild on change",
-      "flags": [],
       "args": [
         {
           "name": "path",
           "help": "Project directory (default: .)",
-          "required": false,
-          "variadic": false
+          "required": false
         }
-      ],
-      "passthrough": false
+      ]
     },
     "validate": {
       "name": "validate",
@@ -123,30 +126,20 @@
           "name": "schema",
           "type": "str",
           "help": "Force schema type (auto-detected if omitted)",
-          "short": null,
           "default": "",
-          "env": null,
           "choices": [
             "scene",
             "config",
             ""
-          ],
-          "repeatable": false,
-          "negatable": null,
-          "hidden": false
+          ]
         }
       ],
       "args": [
         {
           "name": "file",
-          "help": "JSON file to validate",
-          "required": true,
-          "variadic": false
+          "help": "JSON file to validate"
         }
-      ],
-      "passthrough": false
+      ]
     }
-  },
-  "groups": {},
-  "deprecated": {}
+  }
 }
