@@ -1,6 +1,6 @@
 ---
 title: predraw
-description: "API reference for the predraw module — auto-generated documentation covering public functions, classes, and type signatures."
+description: "Declarative scene-to-image rendering pipeline — load JSON scene definitions, resolve styles and components, and output SVG, PNG, or WebP."
 generated: true
 nav_group: "API Reference"
 nav_order: 1
