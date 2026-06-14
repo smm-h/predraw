@@ -1,6 +1,5 @@
 {
   "version": "0.2.1",
-  "version_source": "pyproject.toml",
   "base_url": "https://predraw.smmh.dev",
   "source": [{"path": "predraw/", "language": "python"}],
   "versions": [{"version": "0.2.1", "indexed": true}],
