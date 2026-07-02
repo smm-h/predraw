@@ -37,7 +37,7 @@ def main():
         strictcli.Arg(name="path", help="Project directory or scene file (default: .)", required=False, default="."),
     ],
 )
-@strictcli.flag("dry-run", type=bool, help="Print build plan without writing files")
+@strictcli.flag("dry-run", type=bool, default=False, help="Print build plan without writing files")
 def _cmd_build(path: str, *, dry_run: bool = False) -> None:
     """Build all outputs for a scene, grouped by mode to avoid redundant work."""
     scene = load_scene(path)
