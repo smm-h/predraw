@@ -3,7 +3,7 @@
   "files": {
     ".github/workflows/ci-pypi.yml": "e570c40f3db845125a3e415582a50ddc03f2f661be2efa9a187784aedafa01a9",
     ".npmignore": "7c0eea9785c0318aeb39bf8b670ce8384f4a5b812fde69ce23d7d018057325a3",
-    ".github/workflows/publish.yml": "8693ae9fe26f1e2190483993e928ec2fcf5fe91226c0245ef9547ec1f1691302",
+    ".github/workflows/publish.yml": "d64cc1f19f60a2a3ec95d87c110f96387e2468372a2fc98f297e7a4909dd76b1",
     "CHANGELOG.md": "a80be85525ce15e1efab6e8535f150849569b364967ba7de238f832e240fe1f0",
     ".gitignore": "64aa32c5f4d6896bf3da0517221bef02fd69336972137a0ee04314f68fa40848",
     ".rlsbl/changes/unreleased.jsonl": "8e0026088445d20d362105cb81ec7954a0be021b8b10b4eaf8f9a7116a19c1cd",
