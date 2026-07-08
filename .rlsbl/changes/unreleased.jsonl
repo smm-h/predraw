@@ -19,3 +19,4 @@
 {"commits":["7e8403ebf565e2c9c0f39ed1e119d83ccd7d0100"],"user_facing":true,"description":"**Breaking.** `--dry-run` bool flag now requires explicit `--no-dry-run` to disable.","type":"breaking"}
 {"commits":["112ea55837eef1cd30165d3ccdfb2fde84f6280f","1817707a9110a860241643c78eac279c59a92c19","1c7d40d62efe5a179f989e2c43e9d5a407087a6b","3596af2ba647fab3c9508dc603b8ff6e76190986","3df0bf70395fa5d853c896465679217644f9d071"],"user_facing":false}
 {"commits":["663b8be90a77591c9554f2fabd3e48c3e795bae4","9234ddc3e4d7bdb57fc43530f52a896fef7658c2","d0ee991f08958229344ae79445147b0da32bff4b","e989fb4664162eac86d2ea0ce0b772411a311bce"],"user_facing":false}
+{"id":"18c03efb59cc1eee16d5594e7e904955b2d8db18cc7d6577","commits":["39de1613ec352ea9bdb9c441bc38fc18b6d17089"],"user_facing":false}
