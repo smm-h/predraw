@@ -38,7 +38,7 @@ def main():
     ],
 )
 @strictcli.flag("dry-run", type=bool, default=False, help="Print build plan without writing files")
-def _cmd_build(path: str, *, dry_run: bool = False) -> None:
+def _cmd_build(ctx, path: str, *, dry_run: bool = False) -> None:
     """Build all outputs for a scene, grouped by mode to avoid redundant work."""
     scene = load_scene(path)
     config = load_config(path)
@@ -104,7 +104,7 @@ def _cmd_build(path: str, *, dry_run: bool = False) -> None:
     ],
 )
 @strictcli.flag("output", short="o", type=str, default="packed.json", help="Output file path (default: packed.json)")
-def _cmd_pack(path: str, *, output: str) -> None:
+def _cmd_pack(ctx, path: str, *, output: str) -> None:
     """Pack a scene directory into a single self-contained JSON file."""
     scene = load_scene(path)
     packed = pack_scene(scene)
@@ -127,7 +127,7 @@ def _cmd_pack(path: str, *, output: str) -> None:
     ],
 )
 @strictcli.flag("output", short="o", type=str, default=".", help="Output directory (default: .)")
-def _cmd_unpack(file: str, *, output: str) -> None:
+def _cmd_unpack(ctx, file: str, *, output: str) -> None:
     """Unpack a packed JSON file into a project directory."""
     file_path = Path(file)
     if not file_path.exists():
@@ -181,7 +181,7 @@ _STARTER_CONFIG = {
         strictcli.Arg(name="path", help="Directory to initialize (default: .)", required=False, default="."),
     ],
 )
-def _cmd_init(path: str) -> None:
+def _cmd_init(ctx, path: str) -> None:
     """Create a starter predraw project in the given directory."""
     target = Path(path)
     main_file = target / "main.json"
@@ -237,7 +237,7 @@ def _detect_changes(prev_mtimes: dict[Path, float], curr_mtimes: dict[Path, floa
         strictcli.Arg(name="path", help="Project directory (default: .)", required=False, default="."),
     ],
 )
-def _cmd_watch(path: str) -> None:
+def _cmd_watch(ctx, path: str) -> None:
     """Watch project files and rebuild on change."""
     project_dir = Path(path).resolve()
 
@@ -267,7 +267,7 @@ def _cmd_watch(path: str) -> None:
 
                 # Rebuild
                 try:
-                    _cmd_build(str(project_dir))
+                    _cmd_build(None, str(project_dir))
                     n_files = len(curr_mtimes)
                     print(f"Rebuilt ({n_files} files)")
                 except Exception as e:
@@ -290,7 +290,7 @@ def _cmd_watch(path: str) -> None:
     ],
 )
 @strictcli.flag("schema", type=str, default="", choices=["scene", "config", ""], help="Force schema type (auto-detected if omitted)")
-def _cmd_validate(file: str, *, schema: str) -> None:
+def _cmd_validate(ctx, file: str, *, schema: str) -> None:
     """Validate a JSON file against its scene or config schema."""
     file_path = Path(file)
     if not file_path.exists():

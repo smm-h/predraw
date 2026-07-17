@@ -872,7 +872,7 @@ class TestInit:
         from predraw.cli import _cmd_init
 
         target = tmp_path / "myproject"
-        _cmd_init(str(target))
+        _cmd_init(None, str(target))
 
         main_file = target / "main.json"
         config_file = target / "config.json"
@@ -897,7 +897,7 @@ class TestInit:
         main_file.write_text("{}", encoding="utf-8")
 
         with pytest.raises(SystemExit):
-            _cmd_init(str(tmp_path))
+            _cmd_init(None, str(tmp_path))
 
 
 # ─── Dry run tests ─────────────────────────────────────────────────────────────
@@ -922,7 +922,7 @@ class TestDryRun:
         (tmp_path / "main.json").write_text(json.dumps(scene_data), encoding="utf-8")
         (tmp_path / "config.json").write_text(json.dumps(config_data), encoding="utf-8")
 
-        _cmd_build(str(tmp_path), dry_run=True)
+        _cmd_build(None, str(tmp_path), dry_run=True)
 
         # No output file should have been created
         assert not (tmp_path / "output.svg").exists()
