@@ -32,3 +32,7 @@ docs/_build/
 .rlsbl-monorepo/lock
 
 target/
+
+# Locally-built strictspec CLI (dev fallback when the PyPI console-script binary
+# download is unavailable). The shipped code depends only on the strictspec PyPI runtime.
+.strictspec-tools/

@@ -8,9 +8,9 @@ requires-python = ">=3.11"
 dependencies = [
     "cairosvg>=2.7",
     "fonttools>=4.62.1",
-    "jsonschema>=4.20",
     "pillow>=10.0",
     "strictcli",
+    "strictspec>=0.1.0",
 ]
 
 [project.scripts]

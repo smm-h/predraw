@@ -1,0 +1,22 @@
+# strictspec manifest (strictspec.toml).
+# File-driven codegen: each [[schemas]] block names a schema file and its targets.
+# Regenerate the validators with:  strictspec gen
+# The generated *_validator.py files are machine-generated (chmod 444); edit the schema and
+# regenerate, never the generated file.
+format_version = 1
+
+[[schemas]]
+path = "predraw/schema/scene.schema.toml"
+
+  [[schemas.targets]]
+  lang = "python"
+  output = "predraw/_scene_validator.py"
+  package = "predraw"
+
+[[schemas]]
+path = "predraw/schema/config.schema.toml"
+
+  [[schemas.targets]]
+  lang = "python"
+  output = "predraw/_config_validator.py"
+  package = "predraw"
