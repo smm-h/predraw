@@ -100,7 +100,7 @@ _HAS_LIBERATION_SANS = _LIBERATION_SANS_PATH is not None
 class TestLoader:
     def test_load_scene_from_file(self, tmp_path: Path):
         """Load a JSON file directly."""
-        scene_data = {"width": 400, "height": 300, "elements": []}
+        scene_data = {"format_version": 1, "width": 400, "height": 300, "elements": []}
         scene_file = tmp_path / "scene.json"
         scene_file.write_text(json.dumps(scene_data), encoding="utf-8")
 
@@ -112,7 +112,7 @@ class TestLoader:
 
     def test_load_scene_from_directory(self, tmp_path: Path):
         """Load from dir with main.json."""
-        scene_data = {"width": 800, "height": 600, "background": "#111"}
+        scene_data = {"format_version": 1, "width": 800, "height": 600, "background": "#111", "elements": []}
         main_file = tmp_path / "main.json"
         main_file.write_text(json.dumps(scene_data), encoding="utf-8")
 
@@ -127,6 +127,7 @@ class TestLoader:
         scene_data = {
             "width": 100,
             "height": 100,
+            "format_version": 1,
             "elements": [
                 {"type": "rect", "x": 10, "y": 20, "width": 50, "height": 30, "fill": "#abc"}
             ],
@@ -149,6 +150,7 @@ class TestLoader:
         scene_data = {
             "width": 100,
             "height": 100,
+            "format_version": 1,
             "elements": [
                 {
                     "type": "path",
@@ -175,6 +177,7 @@ class TestLoader:
         scene_data = {
             "width": 100,
             "height": 100,
+            "format_version": 1,
             "elements": [
                 {
                     "type": "text",
@@ -207,11 +210,18 @@ class TestLoader:
         assert el.char_styles[0].fill == "#f00"
 
     def test_parse_use_element_no_type(self, tmp_path: Path):
-        """Parse {"use": "x"} without explicit type."""
+        """A use element with an explicit type loads and resolves its target name.
+
+        Note: strictspec discriminated unions require the discriminator (`type`) to be
+        present, so a use element MUST carry "type": "use". Documents that omitted
+        `type` on a use element (relying on inference) are now rejected — see
+        test_use_without_type_rejected.
+        """
         scene_data = {
             "width": 100,
             "height": 100,
-            "elements": [{"use": "mycomp"}],
+            "format_version": 1,
+            "elements": [{"type": "use", "use": "mycomp"}],
         }
         f = tmp_path / "scene.json"
         f.write_text(json.dumps(scene_data), encoding="utf-8")
@@ -222,11 +232,30 @@ class TestLoader:
         assert el.type == "use"
         assert el.use == "mycomp"
 
+    def test_use_without_type_rejected(self, tmp_path: Path):
+        """A use element lacking the explicit discriminator `type` is now rejected
+        (the discriminated-union narrowing adopted with strictspec).
+        """
+        from predraw.validator import SchemaValidationError
+
+        scene_data = {
+            "format_version": 1,
+            "width": 100,
+            "height": 100,
+            "elements": [{"use": "mycomp"}],
+        }
+        f = tmp_path / "scene.json"
+        f.write_text(json.dumps(scene_data), encoding="utf-8")
+
+        with pytest.raises(SchemaValidationError):
+            load_scene(str(f))
+
     def test_children_alias(self, tmp_path: Path):
         """Parse group with 'children' key instead of 'elements'."""
         scene_data = {
             "width": 100,
             "height": 100,
+            "format_version": 1,
             "elements": [
                 {
                     "type": "group",
@@ -259,8 +288,9 @@ class TestLoader:
         scene_data = {
             "width": 100,
             "height": 100,
+            "format_version": 1,
             "imports": {"box": "components/box.json"},
-            "elements": [{"use": "box"}],
+            "elements": [{"type": "use", "use": "box"}],
         }
         (tmp_path / "main.json").write_text(json.dumps(scene_data), encoding="utf-8")
 
@@ -276,6 +306,7 @@ class TestLoader:
         scene_data = {
             "width": 100,
             "height": 100,
+            "format_version": 1,
             "styles": {"fg": {"light": "#000", "dark": "#fff"}},
             "elements": [{"type": "rect", "fill": "$fg", "width": 10, "height": 10}],
         }
@@ -292,6 +323,7 @@ class TestLoader:
         scene_data = {
             "width": 100,
             "height": 100,
+            "format_version": 1,
             "styles": {"fg": {"light": "#111", "dark": "#eee"}},
             "elements": [{"type": "rect", "fill": "$fg", "width": 10, "height": 10}],
         }
@@ -311,7 +343,7 @@ class TestLoader:
 
         config = load_config(str(tmp_path))
 
-        assert config == {"outputs": [{"format": "svg", "path": "output.svg"}]}
+        assert config == {"format_version": 1, "outputs": [{"format": "svg", "path": "output.svg"}]}
 
 
 # ─── Renderer tests ─────────────────────────────────────────────────────────────
@@ -541,11 +573,12 @@ class TestPackUnpack:
         (comp_dir / "arrow.json").write_text(json.dumps(comp_data), encoding="utf-8")
 
         scene_data = {
+            "format_version": 1,
             "width": 400,
             "height": 200,
             "background": "#222",
             "imports": {"arrow": "components/arrow.json"},
-            "elements": [{"use": "arrow", "fill": "#fff"}],
+            "elements": [{"type": "use", "use": "arrow", "fill": "#fff"}],
         }
         (project_dir / "main.json").write_text(json.dumps(scene_data), encoding="utf-8")
 
@@ -670,6 +703,7 @@ class TestValidator:
     def test_valid_scene(self, tmp_path: Path):
         """A minimal valid scene passes validation with no errors."""
         data = {
+            "format_version": 1,
             "width": 400,
             "height": 300,
             "elements": [
@@ -682,6 +716,7 @@ class TestValidator:
     def test_valid_config(self, tmp_path: Path):
         """A minimal valid config passes validation with no errors."""
         data = {
+            "format_version": 1,
             "outputs": [
                 {"format": "svg", "path": "output.svg"}
             ]
@@ -691,7 +726,7 @@ class TestValidator:
 
     def test_invalid_scene_missing_required(self, tmp_path: Path):
         """Missing width/height/elements produces validation errors."""
-        data = {}  # Missing all required fields
+        data = {"format_version": 1}  # Gate satisfied; missing all required fields
         errors = validate_scene(data)
         assert len(errors) > 0
         # Should mention the missing required properties
@@ -701,6 +736,7 @@ class TestValidator:
     def test_invalid_scene_wrong_type(self, tmp_path: Path):
         """Wrong type for width (string instead of number) produces a type error."""
         data = {
+            "format_version": 1,
             "width": "string_not_number",
             "height": 300,
             "elements": [],
@@ -714,6 +750,7 @@ class TestValidator:
     def test_auto_detect_config(self, tmp_path: Path):
         """A file with 'outputs' key is detected as config (mirrors CLI auto-detection)."""
         data = {
+            "format_version": 1,
             "outputs": [
                 {"format": "png", "path": "out.png"}
             ]
@@ -763,6 +800,7 @@ class TestStroke:
         scene_data = {
             "width": 100,
             "height": 100,
+            "format_version": 1,
             "styles": {"primary": {"light": "#111111", "dark": "#eeeeee"}},
             "elements": [
                 {"type": "rect", "width": 10, "height": 10, "fill": "#000", "stroke": "$primary"}
@@ -910,11 +948,13 @@ class TestDryRun:
 
         # Set up a valid project
         scene_data = {
+            "format_version": 1,
             "width": 200,
             "height": 100,
             "elements": [{"type": "rect", "x": 0, "y": 0, "width": 50, "height": 30, "fill": "#f00"}],
         }
         config_data = {
+            "format_version": 1,
             "outputs": [
                 {"format": "svg", "path": "output.svg"},
             ]
@@ -1038,3 +1078,133 @@ class TestGradientStyleResolution:
         assert resolved.elements[0].fill.stops[0].color == "#ff0000"
         # String fill should be resolved
         assert resolved.elements[1].fill == "#fff"
+
+
+# ─── strictspec migration: new behaviour (net-new gate, alias rules, lexeme) ──
+#
+# These assert behaviour that the strictspec engine adds and the legacy jsonschema
+# engine did NOT enforce. Against the pre-migration validator every one of these
+# documents was silently accepted (validate_* returned []); under strictspec they
+# are hard-rejected. That contrast is the red/green boundary for this migration.
+
+
+class TestStrictspecMigration:
+    def test_scene_missing_format_version_rejected(self):
+        """A scene without the integer format_version gate is now rejected."""
+        data = {
+            "width": 400,
+            "height": 300,
+            "elements": [
+                {"type": "rect", "x": 0, "y": 0, "width": 50, "height": 50, "fill": "#f00"}
+            ],
+        }
+        errors = validate_scene(data)
+        assert errors != []
+        assert "format_version" in " ".join(errors)
+
+    def test_config_missing_format_version_rejected(self):
+        """A config without the format_version gate is now rejected."""
+        data = {"outputs": [{"format": "svg", "path": "out.svg"}]}
+        errors = validate_config(data)
+        assert errors != []
+        assert "format_version" in " ".join(errors)
+
+    def test_alias_both_present_rejected(self):
+        """Carrying BOTH a canonical spelling and its snake_case alias is a hard
+        error (STRICTSPEC_ALIAS_BOTH_PRESENT) — the legacy engine accepted both.
+        """
+        data = {
+            "format_version": 1,
+            "width": 100,
+            "height": 100,
+            "elements": [
+                {"type": "rect", "width": 10, "height": 10, "strokeWidth": 2, "stroke_width": 3}
+            ],
+        }
+        errors = validate_scene(data)
+        assert errors != []
+        assert "strokeWidth" in " ".join(errors)
+
+    def test_unrepresentable_number_rejected(self):
+        """A previously-silently-accepted document: an integer lexeme that float64
+        cannot represent exactly (2**53 + 1). jsonschema's `number` accepted it;
+        strictspec refuses the silent precision loss.
+        """
+        data = {
+            "format_version": 1,
+            "width": 2**53 + 1,  # 9007199254740993
+            "height": 100,
+            "elements": [{"type": "background", "fill": "#000000"}],
+        }
+        errors = validate_scene(data)
+        assert errors != []
+
+    def test_load_scene_rejects_missing_gate(self, tmp_path: Path):
+        """The load path enforces the gate: a scene file lacking format_version
+        raises instead of silently loading.
+        """
+        from predraw.validator import SchemaValidationError
+
+        scene_file = tmp_path / "main.json"
+        scene_file.write_text(
+            json.dumps({"width": 100, "height": 100, "elements": []}), encoding="utf-8"
+        )
+        with pytest.raises(SchemaValidationError):
+            load_scene(str(scene_file))
+
+    def test_load_config_rejects_missing_gate(self, tmp_path: Path):
+        """load_config validates an on-disk config.json and raises on a missing gate."""
+        from predraw.validator import SchemaValidationError
+
+        (tmp_path / "config.json").write_text(
+            json.dumps({"outputs": [{"format": "svg", "path": "out.svg"}]}), encoding="utf-8"
+        )
+        with pytest.raises(SchemaValidationError):
+            load_config(str(tmp_path))
+
+    def test_load_scene_stores_format_version(self, tmp_path: Path):
+        """A stamped scene loads and the version is preserved on the Scene model."""
+        scene_file = tmp_path / "main.json"
+        scene_file.write_text(
+            json.dumps({"format_version": 1, "width": 100, "height": 100, "elements": []}),
+            encoding="utf-8",
+        )
+        scene = load_scene(str(scene_file))
+        assert scene.format_version == 1
+
+    def test_snake_case_aliases_still_load(self, tmp_path: Path):
+        """A document using only snake_case alias spellings (and `children`) is valid
+        and its values are read via canonicalization — the loader no longer hand-rolls
+        per-field fallbacks.
+        """
+        scene_data = {
+            "format_version": 1,
+            "width": 100,
+            "height": 100,
+            "elements": [
+                {
+                    "type": "group",
+                    "children": [
+                        {
+                            "type": "rect",
+                            "width": 10,
+                            "height": 10,
+                            "fill": "#000",
+                            "stroke_width": 3,
+                            "stroke_opacity": 0.8,
+                        }
+                    ],
+                }
+            ],
+        }
+        scene_file = tmp_path / "main.json"
+        scene_file.write_text(json.dumps(scene_data), encoding="utf-8")
+
+        scene = load_scene(str(scene_file))
+
+        group = scene.elements[0]
+        assert group.type == "group"
+        assert group.elements is not None and len(group.elements) == 1
+        rect = group.elements[0]
+        assert rect.stroke_width == 3
+        assert rect.stroke_opacity == 0.8
