@@ -300,12 +300,20 @@ project/
 | `mode` | No | `light` or `dark` (default: `dark`) |
 | `quality` | No | WebP quality 1-100 (default: 90) |
 
-## JSON Schema
+## Schema
 
-Formal schemas for editor validation and LLM structured output:
+predraw documents are validated with [strictspec](https://github.com/smm-h/strictspec).
+The authoritative schemas are authored in strictspec's TOML surface syntax and generate
+the runtime validators (`strictspec gen`, driven by `strictspec.toml`):
 
-- `predraw/schema/scene.schema.json` -- scene format
-- `predraw/schema/config.schema.json` -- config format
+- `predraw/schema/scene.schema.toml` -- scene format
+- `predraw/schema/config.schema.toml` -- config format
+
+Every scene and config document must carry a top-level integer `format_version` (currently
+`1`); documents authored before this requirement are stamped once via
+`scripts/stamp_format_version.py`. Validation is strict: unknown keys, ambiguous alias pairs
+(a canonical spelling and its snake_case alias both present), and numerically unrepresentable
+lexemes are hard errors.
 
 ## Requirements
 
