@@ -145,6 +145,7 @@ def _cmd_unpack(ctx, file: str, *, output: str) -> None:
 
 
 _STARTER_MAIN = {
+    "format_version": 1,
     "width": 800,
     "height": 400,
     "styles": {
@@ -167,6 +168,7 @@ _STARTER_MAIN = {
 }
 
 _STARTER_CONFIG = {
+    "format_version": 1,
     "outputs": [
         {"format": "svg", "path": "output.svg", "mode": "dark"},
         {"format": "png", "path": "output.png", "mode": "dark"},
@@ -374,6 +376,7 @@ def unpack_scene(scene: Scene, output_dir: str) -> None:
 
     # Build main.json without defs, with imports
     main_data: dict = {
+        "format_version": scene.format_version,
         "width": scene.width,
         "height": scene.height,
     }
@@ -402,6 +405,7 @@ def unpack_scene(scene: Scene, output_dir: str) -> None:
 def _scene_to_dict(scene: Scene) -> dict:
     """Convert a Scene back to a JSON-serializable dict."""
     data: dict = {
+        "format_version": scene.format_version,
         "width": scene.width,
         "height": scene.height,
     }

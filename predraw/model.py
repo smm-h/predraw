@@ -88,6 +88,9 @@ class Element:
 class Scene:
     width: float
     height: float
+    # strictspec version gate: every on-disk scene document must carry a top-level
+    # integer format_version. Validation guarantees it equals 1 before a Scene is built.
+    format_version: int = 1
     background: str | None = None
     styles: dict[str, Style] | None = None
     imports: dict[str, str] | None = None  # alias -> file path

@@ -6,6 +6,24 @@ import json
 from pathlib import Path
 
 from .model import CharStyle, Element, Font, Gradient, GradientStop, Scene, Style, Transform
+from .validator import ensure_valid_config, ensure_valid_scene
+
+# camelCase canonical spelling -> its snake_case alias. These are the strictspec
+# `aliases` declared on the scene schema (predraw/schema/scene.schema.toml). strictspec
+# owns alias correctness: it rejects a document that carries BOTH spellings
+# (STRICTSPEC_ALIAS_BOTH_PRESENT), so once validation passes at most one spelling of
+# each pair is present and the rewrite below is unambiguous. This single write-side
+# canonicalization replaces the per-field fallbacks the loader used to hand-roll.
+_ALIAS_TO_CANONICAL = {
+    "stroke_width": "strokeWidth",
+    "stroke_dasharray": "strokeDasharray",
+    "stroke_linecap": "strokeLinecap",
+    "stroke_linejoin": "strokeLinejoin",
+    "stroke_opacity": "strokeOpacity",
+    "letter_spacing": "letterSpacing",
+    "char_styles": "charStyles",
+    "children": "elements",
+}
 
 
 def load_scene(path: str) -> Scene:
@@ -13,6 +31,10 @@ def load_scene(path: str) -> Scene:
 
     If path is a directory, looks for main.json.
     If path is a file, loads it directly.
+
+    The document is validated against the strictspec scene schema before parsing
+    (version gate + full structural validation); an invalid document raises
+    SchemaValidationError.
     """
     p = Path(path)
     if p.is_dir():
@@ -20,7 +42,9 @@ def load_scene(path: str) -> Scene:
     else:
         scene_file = p
 
-    data = _load_json(scene_file)
+    raw = scene_file.read_bytes()
+    ensure_valid_scene(raw)
+    data = _canonicalize_aliases(json.loads(raw))
     base_dir = str(scene_file.parent)
     scene = _parse_scene(data, base_dir)
     _resolve_imports(scene, base_dir)
@@ -31,6 +55,23 @@ def _load_json(path: Path) -> dict:
     """Load and parse a JSON file."""
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
+
+
+def _canonicalize_aliases(node):
+    """Recursively rewrite alias spellings to their canonical camelCase form.
+
+    Runs after strictspec validation, which guarantees no alias pair has both
+    spellings present, so each rename is unambiguous. After this pass the parser
+    reads canonical keys only.
+    """
+    if isinstance(node, dict):
+        out = {}
+        for key, value in node.items():
+            out[_ALIAS_TO_CANONICAL.get(key, key)] = _canonicalize_aliases(value)
+        return out
+    if isinstance(node, list):
+        return [_canonicalize_aliases(item) for item in node]
+    return node
 
 
 def _parse_scene(data: dict, base_dir: str) -> Scene:
@@ -53,6 +94,7 @@ def _parse_scene(data: dict, base_dir: str) -> Scene:
     return Scene(
         width=data["width"],
         height=data["height"],
+        format_version=data["format_version"],
         background=data.get("background"),
         styles=styles,
         imports=data.get("imports"),
@@ -82,21 +124,19 @@ def _parse_element(data: dict) -> Element:
         )
 
     char_styles = None
-    cs_key = "charStyles" if "charStyles" in data else "char_styles"
-    if cs_key in data:
+    if "charStyles" in data:
         char_styles = [
             CharStyle(
                 chars=cs["chars"],
                 opacity=cs.get("opacity", 1.0),
                 fill=cs.get("fill"),
             )
-            for cs in data[cs_key]
+            for cs in data["charStyles"]
         ]
 
     child_elements = None
-    children_key = "elements" if "elements" in data else "children" if "children" in data else None
-    if children_key:
-        child_elements = [_parse_element(el) for el in data[children_key]]
+    if "elements" in data:
+        child_elements = [_parse_element(el) for el in data["elements"]]
 
     # Parse fill: can be a string (color/$ref) or a dict (gradient)
     fill_raw = data.get("fill")
@@ -120,15 +160,15 @@ def _parse_element(data: dict) -> Element:
         content=data.get("content"),
         font=font,
         anchor=data.get("anchor", "start"),
-        letter_spacing=data.get("letterSpacing", data.get("letter_spacing", 0)),
+        letter_spacing=data.get("letterSpacing", 0),
         char_styles=char_styles,
         elements=child_elements,
         stroke=stroke,
-        stroke_width=data.get("strokeWidth", data.get("stroke_width")),
-        stroke_dasharray=data.get("strokeDasharray", data.get("stroke_dasharray")),
-        stroke_linecap=data.get("strokeLinecap", data.get("stroke_linecap")),
-        stroke_linejoin=data.get("strokeLinejoin", data.get("stroke_linejoin")),
-        stroke_opacity=data.get("strokeOpacity", data.get("stroke_opacity", 1.0)),
+        stroke_width=data.get("strokeWidth"),
+        stroke_dasharray=data.get("strokeDasharray"),
+        stroke_linecap=data.get("strokeLinecap"),
+        stroke_linejoin=data.get("strokeLinejoin"),
+        stroke_opacity=data.get("strokeOpacity", 1.0),
         use=data.get("use"),
     )
 
@@ -164,7 +204,10 @@ def _resolve_imports(scene: Scene, base_dir: str) -> None:
     base = Path(base_dir)
     for alias, file_path in scene.imports.items():
         full_path = base / file_path
-        data = _load_json(full_path)
+        # Imported components are standalone Element documents (not scenes), so they
+        # are not gated by the scene schema; still canonicalize their alias spellings
+        # so the parser sees canonical keys only.
+        data = _canonicalize_aliases(_load_json(full_path))
         scene.defs[alias] = _parse_element(data)
 
 
@@ -222,13 +265,21 @@ def _resolve_element_styles(
 
 
 def load_config(path: str) -> dict:
-    """Load config.json from a directory or return defaults."""
+    """Load config.json from a directory or return defaults.
+
+    When a config.json is present it is validated against the strictspec config
+    schema (version gate + full validation) before being returned; an invalid
+    config raises SchemaValidationError. When absent, the in-memory default is
+    returned as-is.
+    """
     p = Path(path)
     if p.is_file():
         p = p.parent
 
     config_file = p / "config.json"
     if config_file.exists():
-        return _load_json(config_file)
+        raw = config_file.read_bytes()
+        ensure_valid_config(raw)
+        return json.loads(raw)
 
-    return {"outputs": [{"format": "svg", "path": "output.svg"}]}
+    return {"format_version": 1, "outputs": [{"format": "svg", "path": "output.svg"}]}
