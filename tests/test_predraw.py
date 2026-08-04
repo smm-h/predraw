@@ -943,8 +943,12 @@ class TestInit:
 
 class TestDryRun:
     def test_build_dry_run(self, tmp_path: Path):
-        """Running build with dry_run=True produces no output files."""
-        from predraw.cli import _cmd_build
+        """Running the build with dry_run=True produces no output files.
+
+        `--dry-run` is framework-owned now, so the handler reads it off the
+        Context and hands it to `_build`; `_build` is what this exercises.
+        """
+        from predraw.cli import _build
 
         # Set up a valid project
         scene_data = {
@@ -962,7 +966,7 @@ class TestDryRun:
         (tmp_path / "main.json").write_text(json.dumps(scene_data), encoding="utf-8")
         (tmp_path / "config.json").write_text(json.dumps(config_data), encoding="utf-8")
 
-        _cmd_build(None, str(tmp_path), dry_run=True)
+        _build(str(tmp_path), dry_run=True)
 
         # No output file should have been created
         assert not (tmp_path / "output.svg").exists()

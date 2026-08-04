@@ -32,14 +32,27 @@ def main():
 
 @app.command(
     "build",
+    # mutating: renders the scene and writes every output file the config
+    # declares (SVG/PNG) into the project directory.
+    effect="mutating",
     help="Build scene into output files",
     args=[
         strictcli.Arg(name="path", help="Project directory or scene file (default: .)", required=False, default="."),
     ],
 )
-@strictcli.flag("dry-run", type=bool, default=False, help="Print build plan without writing files")
-def _cmd_build(ctx, path: str, *, dry_run: bool = False) -> None:
+def _cmd_build(ctx, path: str) -> None:
     """Build all outputs for a scene, grouped by mode to avoid redundant work."""
+    return _build(path, dry_run=ctx.dry_run)
+
+
+def _build(path: str, *, dry_run: bool) -> int:
+    """The build itself, callable without a strictcli Context.
+
+    Split out of the handler because ``watch`` rebuilds by calling it directly
+    and because ``--dry-run`` is now framework-owned: the flag arrives on the
+    Context (``ctx.dry_run``), never as a handler kwarg, so the one parameter
+    that actually varies has to be passed explicitly here.
+    """
     scene = load_scene(path)
     config = load_config(path)
     outputs = config.get("outputs", [])
@@ -98,6 +111,9 @@ def _cmd_build(ctx, path: str, *, dry_run: bool = False) -> None:
 
 @app.command(
     "pack",
+    # mutating: writes the packed scene to --output (default packed.json),
+    # creating parent directories as needed.
+    effect="mutating",
     help="Pack a scene directory into a single JSON file",
     args=[
         strictcli.Arg(name="path", help="Project directory or scene file (default: .)", required=False, default="."),
@@ -121,6 +137,9 @@ def _cmd_pack(ctx, path: str, *, output: str) -> None:
 
 @app.command(
     "unpack",
+    # mutating: writes main.json and a components/ tree into --output
+    # (default: the current directory).
+    effect="mutating",
     help="Unpack a packed JSON file into a project directory",
     args=[
         strictcli.Arg(name="file", help="Packed JSON file to unpack"),
@@ -178,6 +197,8 @@ _STARTER_CONFIG = {
 
 @app.command(
     "init",
+    # mutating: creates the target directory plus main.json and config.json.
+    effect="mutating",
     help="Create a starter project in a directory",
     args=[
         strictcli.Arg(name="path", help="Directory to initialize (default: .)", required=False, default="."),
@@ -234,6 +255,9 @@ def _detect_changes(prev_mtimes: dict[Path, float], curr_mtimes: dict[Path, floa
 
 @app.command(
     "watch",
+    # mutating: the watch loop is a build loop -- every detected change runs
+    # the same output-writing build as `build`.
+    effect="mutating",
     help="Watch project files and rebuild on change",
     args=[
         strictcli.Arg(name="path", help="Project directory (default: .)", required=False, default="."),
@@ -267,9 +291,10 @@ def _cmd_watch(ctx, path: str) -> None:
                 files = _collect_json_files(project_dir)
                 curr_mtimes = _get_mtimes(files)
 
-                # Rebuild
+                # Rebuild. `--dry-run` propagates: a watched dry run keeps
+                # printing the build plan on every change instead of writing.
                 try:
-                    _cmd_build(None, str(project_dir))
+                    _build(str(project_dir), dry_run=ctx.dry_run)
                     n_files = len(curr_mtimes)
                     print(f"Rebuilt ({n_files} files)")
                 except Exception as e:
@@ -286,6 +311,9 @@ def _cmd_watch(ctx, path: str) -> None:
 
 @app.command(
     "validate",
+    # read_only: loads the JSON file, runs the schema validator and prints the
+    # verdict. Nothing is written and the file is never rewritten in place.
+    effect="read_only",
     help="Validate a scene or config JSON file against its schema",
     args=[
         strictcli.Arg(name="file", help="JSON file to validate"),
