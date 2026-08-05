@@ -27,3 +27,4 @@
 {"format_version":1,"id":"18c645f96e6095a28c57ebb90c834c9d87a2a0699ef5a785","commits":["ccf8cd4d1e4955637032291609a92597bf58b36d"],"user_facing":false}
 {"format_version":1,"id":"18c8bed51fefb9a6619c0cc029654f9a8f5b42d76a8cfb00","commits":["a004ca79ecc4abbaa92ba070c37dfb54e3152604"],"user_facing":true,"description":"**The `predraw` CLI works again on strictcli 0.36.0.** `build --dry-run` is unchanged for callers -- the flag is now supplied by the framework rather than declared by predraw, which is what the new version requires.","type":"fix"}
 {"format_version":1,"id":"18c8bf45fa4de1f201ed47a0bb0149c58acaf315251c6ae5","commits":["d351fcb180c38cd3a0b12faef8051ec8fb68cdb6"],"user_facing":false}
+{"format_version":1,"id":"18c8e415805dddce597d2a43ddf24de0852a907c79b0dac6","commits":["881ed3cf1c0f06d4aa53735a7adffd3efd0c71ae"],"user_facing":false}
