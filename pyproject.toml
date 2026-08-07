@@ -23,4 +23,16 @@ build-backend = "hatchling.build"
 [dependency-groups]
 dev = [
     "pytest>=9.0.3",
+    "stricttest>=0.1.1",
 ]
+
+# The stricttest floor. Installing the plugin IS adoption -- it registers via the
+# pytest11 entry point and aborts at configure time unless every required stance
+# below is declared. predraw's suite is pure in-process rendering: no network, no
+# unix sockets, and no sandbox runner exists in this repo yet.
+[tool.pytest.ini_options]
+stricttest_sockets = "deny"
+stricttest_socket_allowlist = []
+stricttest_unix_socket_allowlist = []
+stricttest_loopback = "deny"
+stricttest_sandbox_required = "false"
