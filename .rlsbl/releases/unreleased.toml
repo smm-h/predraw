@@ -2,11 +2,23 @@
 format_version = 1
 # Version bump type: patch, minor, major, infra, or prerelease
 #   prerelease: advance an existing pre-release (0.6.0-beta.0 -> -beta.1)
-bump = ""
+bump = "minor"
 # Short description of this release (required)
-description = ""
+description = "strictspec validation for scene and config documents, a working CLI on strictcli 0.36.0, and an enforced strictcli floor."
 # Optional context explaining why these changes were made
-context = ""
+context = """
+Two breaking changes ship together. Scene and config documents are now
+validated by strictspec instead of jsonschema: every document must carry a
+top-level integer `format_version`, `use` elements must name their `type`, and
+a field may not be spelled both canonically and in snake_case. Separately,
+`--dry-run` became a framework-owned flag, so disabling it requires the
+explicit `--no-dry-run` spelling.
+
+The release also repairs installs. predraw's CLI could not register against
+strictcli releases before 0.36.0; the manifest now declares that floor so a
+fresh install fails loudly at resolution time instead of producing a CLI that
+cannot start.
+"""
 # Pre-release channel: alpha, beta, rc, or stable (ordered;
 # demotion is an error). With patch/minor/major it ENTERS the
 # channel (0.5.2 + minor + alpha -> 0.6.0-alpha.0); with
