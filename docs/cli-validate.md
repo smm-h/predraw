@@ -2,6 +2,7 @@
 title: predraw validate
 description: "Validate a scene or config JSON file against its schema"
 generated: true
+seeded: true
 nav_group: "CLI Reference"
 nav_order: 5
 ---
@@ -11,14 +12,16 @@ nav_order: 5
 
 Validate a scene or config JSON file against its schema
 
+**Effect:** read_only
+
 ## Flags
 
 | Name | Short | Type | Default | Env | Description |
-|------|-------|------|---------|-----|-------------|
+| --- | --- | --- | --- | --- | --- |
 | `--schema` |  | str |  |  | Force schema type (auto-detected if omitted) |
 
 ## Arguments
 
 | Name | Required | Description |
-|------|----------|-------------|
+| --- | --- | --- |
 | `file` | yes | JSON file to validate |

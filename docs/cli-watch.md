@@ -2,6 +2,7 @@
 title: predraw watch
 description: "Reference for the predraw watch command — usage, flags, arguments, and examples for the watch subcommand of the predraw CLI."
 generated: true
+seeded: true
 nav_group: "CLI Reference"
 nav_order: 6
 ---
@@ -11,8 +12,10 @@ nav_order: 6
 
 Watch project files and rebuild on change
 
+**Effect:** mutating
+
 ## Arguments
 
 | Name | Required | Description |
-|------|----------|-------------|
+| --- | --- | --- |
 | `path` | no | Project directory (default: .) |

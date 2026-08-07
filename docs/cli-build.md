@@ -2,6 +2,7 @@
 title: predraw build
 description: "Reference for the predraw build command — usage, flags, arguments, and examples for the build subcommand of the predraw CLI."
 generated: true
+seeded: true
 nav_group: "CLI Reference"
 nav_order: 1
 ---
@@ -11,14 +12,10 @@ nav_order: 1
 
 Build scene into output files
 
-## Flags
-
-| Name | Short | Type | Default | Env | Description |
-|------|-------|------|---------|-----|-------------|
-| `--dry-run` |  | bool |  |  | Print build plan without writing files |
+**Effect:** mutating
 
 ## Arguments
 
 | Name | Required | Description |
-|------|----------|-------------|
+| --- | --- | --- |
 | `path` | no | Project directory or scene file (default: .) |

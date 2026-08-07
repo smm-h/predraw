@@ -2,6 +2,7 @@
 title: predraw CLI Reference
 description: "Complete CLI reference for predraw — all available commands, subcommands, flags, arguments, and usage examples with detailed descriptions."
 generated: true
+seeded: true
 nav_group: "CLI Reference"
 nav_order: 0
 order: 91
@@ -12,7 +13,7 @@ order: 91
 
 predraw scene builder
 
-Version: 0.2.1
+Version: :-: var key="project.version"
 
 ## Commands
 
@@ -22,3 +23,14 @@ Version: 0.2.1
 - [init](cli-init.html) -- Create a starter project in a directory
 - [watch](cli-watch.html) -- Watch project files and rebuild on change
 - [validate](cli-validate.html) -- Validate a scene or config JSON file against its schema
+
+## Framework flags
+
+These flags are owned by the strictcli framework, not by the app. No command may declare a flag with one of these names, and each is recognized anywhere on the command line.
+
+| Flag | Effect |
+| --- | --- |
+| `--dry-run` | Preview mode: no mutation runs. The framework prints a log of every effect the command would have performed. |
+| `--approve-consequential` | Skips the confirmation prompt a consequential command shows before it runs. |
+| `--quiet` | Hides informational output. Warnings, errors, structured data and the dry-run log are never suppressed. |
+| `--verbose` | Shows debug output. `--quiet` wins when both are passed. |

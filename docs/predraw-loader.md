@@ -9,4 +9,4 @@ nav_order: 6
 
 # predraw.loader
 
-:-: ref path="predraw.loader"
+:-: ref path="predraw.loader" lang="python"

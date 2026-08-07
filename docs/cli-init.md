@@ -2,6 +2,7 @@
 title: predraw init
 description: "Reference for the predraw init command — usage, flags, arguments, and examples for the init subcommand of the predraw CLI."
 generated: true
+seeded: true
 nav_group: "CLI Reference"
 nav_order: 2
 ---
@@ -11,8 +12,10 @@ nav_order: 2
 
 Create a starter project in a directory
 
+**Effect:** mutating
+
 ## Arguments
 
 | Name | Required | Description |
-|------|----------|-------------|
+| --- | --- | --- |
 | `path` | no | Directory to initialize (default: .) |

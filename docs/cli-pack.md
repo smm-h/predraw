@@ -2,6 +2,7 @@
 title: predraw pack
 description: "Reference for the predraw pack command — usage, flags, arguments, and examples for the pack subcommand of the predraw CLI."
 generated: true
+seeded: true
 nav_group: "CLI Reference"
 nav_order: 3
 ---
@@ -11,14 +12,16 @@ nav_order: 3
 
 Pack a scene directory into a single JSON file
 
+**Effect:** mutating
+
 ## Flags
 
 | Name | Short | Type | Default | Env | Description |
-|------|-------|------|---------|-----|-------------|
+| --- | --- | --- | --- | --- | --- |
 | `--output` | `-o` | str | packed.json |  | Output file path (default: packed.json) |
 
 ## Arguments
 
 | Name | Required | Description |
-|------|----------|-------------|
+| --- | --- | --- |
 | `path` | no | Project directory or scene file (default: .) |

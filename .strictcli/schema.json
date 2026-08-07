@@ -1,12 +1,15 @@
 {
+  "schema_version": 1,
   "defaults": {
+    "schema_version": 1,
     "app": {
       "env_prefix": null,
       "config": false,
       "global_flags": [],
       "commands": {},
       "groups": {},
-      "deprecated": {}
+      "deprecated": {},
+      "tag_contracts": {}
     },
     "flag": {
       "short": null,
@@ -14,22 +17,33 @@
       "env": null,
       "choices": null,
       "repeatable": false,
+      "unique": false,
+      "env_separator": null,
       "negatable": null,
       "hidden": false
     },
     "arg": {
+      "type": "str",
       "required": true,
-      "variadic": false
+      "default": null,
+      "variadic": false,
+      "choices": null
     },
     "command": {
       "passthrough": false,
       "flags": [],
-      "args": []
+      "args": [],
+      "tags": [],
+      "constraints": [],
+      "hidden": false,
+      "interactive": false
     },
     "group": {
       "commands": {},
       "groups": {},
-      "deprecated": {}
+      "deprecated": {},
+      "tags": [],
+      "hidden": false
     }
   },
   "project_id": "predraw",
@@ -40,26 +54,20 @@
     "build": {
       "name": "build",
       "help": "Build scene into output files",
-      "flags": [
-        {
-          "name": "dry-run",
-          "type": "bool",
-          "help": "Print build plan without writing files",
-          "default": false,
-          "negatable": true
-        }
-      ],
+      "effect": "mutating",
       "args": [
         {
           "name": "path",
           "help": "Project directory or scene file (default: .)",
-          "required": false
+          "required": false,
+          "default": "."
         }
       ]
     },
     "pack": {
       "name": "pack",
       "help": "Pack a scene directory into a single JSON file",
+      "effect": "mutating",
       "flags": [
         {
           "name": "output",
@@ -73,13 +81,15 @@
         {
           "name": "path",
           "help": "Project directory or scene file (default: .)",
-          "required": false
+          "required": false,
+          "default": "."
         }
       ]
     },
     "unpack": {
       "name": "unpack",
       "help": "Unpack a packed JSON file into a project directory",
+      "effect": "mutating",
       "flags": [
         {
           "name": "output",
@@ -99,28 +109,33 @@
     "init": {
       "name": "init",
       "help": "Create a starter project in a directory",
+      "effect": "mutating",
       "args": [
         {
           "name": "path",
           "help": "Directory to initialize (default: .)",
-          "required": false
+          "required": false,
+          "default": "."
         }
       ]
     },
     "watch": {
       "name": "watch",
       "help": "Watch project files and rebuild on change",
+      "effect": "mutating",
       "args": [
         {
           "name": "path",
           "help": "Project directory (default: .)",
-          "required": false
+          "required": false,
+          "default": "."
         }
       ]
     },
     "validate": {
       "name": "validate",
       "help": "Validate a scene or config JSON file against its schema",
+      "effect": "read_only",
       "flags": [
         {
           "name": "schema",

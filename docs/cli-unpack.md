@@ -2,6 +2,7 @@
 title: predraw unpack
 description: "Unpack a packed JSON file into a project directory"
 generated: true
+seeded: true
 nav_group: "CLI Reference"
 nav_order: 4
 ---
@@ -11,14 +12,16 @@ nav_order: 4
 
 Unpack a packed JSON file into a project directory
 
+**Effect:** mutating
+
 ## Flags
 
 | Name | Short | Type | Default | Env | Description |
-|------|-------|------|---------|-----|-------------|
+| --- | --- | --- | --- | --- | --- |
 | `--output` | `-o` | str | . |  | Output directory (default: .) |
 
 ## Arguments
 
 | Name | Required | Description |
-|------|----------|-------------|
+| --- | --- | --- |
 | `file` | yes | Packed JSON file to unpack |
