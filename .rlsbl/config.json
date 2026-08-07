@@ -5,6 +5,7 @@
     "pypi"
   ],
   "publish_mode": "ci",
+  "env_file": "~/Projects/.env",
   "push_timeout": 120,
   "pipelines": {
     "npm": {
