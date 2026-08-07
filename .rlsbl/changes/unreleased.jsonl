@@ -32,3 +32,4 @@
 {"format_version":1,"id":"18c98a6196be52e4cd494ebe54764218a2e8c01d3a5d54e0","commits":["7e8be2f0d51b9967617a97e9f3689070148c3c9a"],"user_facing":false}
 {"format_version":1,"id":"18c98a61a0a6a908bd5821505d35418e9c2b59044178e612","commits":["c266fb91dbb68e039293d31d3d563bde8053809b","8f4d877229bd47801d065a6467803e413b91fbcb"],"user_facing":false}
 {"format_version":1,"id":"18c98a61aa2d88edc804294ad31e426a8a9a70dc75e03adb","commits":["cdd45a6b9ab96c1cdb227822d418397aa1fcac5d"],"user_facing":false}
+{"format_version":1,"id":"18c98a62c06031c34d399d10672e481b81ba18509ab83934","commits":["d1649f56340cd5bd61871551dffc1ba6cfef6154"],"user_facing":true,"description":"**Installs now refuse an incompatible `strictcli`.** `predraw` declares `strictcli>=0.36.0`, so a fresh install can no longer resolve an older framework release that the CLI cannot register against.","type":"fix"}
