@@ -316,7 +316,7 @@ requires-dist = [
     { name = "cairosvg", specifier = ">=2.7" },
     { name = "fonttools", specifier = ">=4.62.1" },
     { name = "pillow", specifier = ">=10.0" },
-    { name = "strictcli" },
+    { name = "strictcli", specifier = ">=0.36.0" },
     { name = "strictspec", specifier = ">=0.1.0" },
 ]
 

@@ -9,7 +9,7 @@ dependencies = [
     "cairosvg>=2.7",
     "fonttools>=4.62.1",
     "pillow>=10.0",
-    "strictcli",
+    "strictcli>=0.36.0",
     "strictspec>=0.1.0",
 ]
 
