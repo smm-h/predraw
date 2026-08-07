@@ -20,6 +20,11 @@
       "default": true
     }
   ],
+  "gen": {
+    "exclude": [
+      "predraw._*_validator"
+    ]
+  },
   "deploy": {
     "provider": "cloudflare-pages",
     "project": "predraw"
