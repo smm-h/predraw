@@ -1,44 +1,44 @@
 {
   "_hash_version": 3,
   "en/cli-build.md": {
-    "content": "b880a488d6ea897a68d79a011c8c8ce27dd409c77dd03c3c7d75895af5894f15",
+    "content": "b54e4a9477a259f6468a4aa07971ddfeb3d80d245a603c1a279bdfd0ccf31b2e",
     "description": "72cef6cdbe3afad727e511be6cf1d97b8f93851ebcbd128b140ce9b1b882cd20",
-    "schema_hash": "e2fa7a0ee7846691266dae3b52dfb3e9ff9628102ae504ae5764c61eb8fc2547",
+    "schema_hash": "5c331ca5ff037a6ab300a1fefa75dc976339d676acc5bfab72d88b4a50644ebd",
     "seed_hash": "72cef6cdbe3afad727e511be6cf1d97b8f93851ebcbd128b140ce9b1b882cd20"
   },
   "en/cli-index.md": {
-    "content": "5b08442fcba48da4049a93dbb98732a738f1cd65b35b500cfa117d74ffa8f66f",
+    "content": "88297e34d3e1e985ff9cd10083f5bce2bede8851f7278ca6561dfa348f371f9a",
     "description": "5f3b5b7846f35885a1c1caec8368e0d0f12f8799dcff2ce17a23ab30882595a2",
     "seed_hash": "5f3b5b7846f35885a1c1caec8368e0d0f12f8799dcff2ce17a23ab30882595a2"
   },
   "en/cli-init.md": {
-    "content": "ea9acac7120308d74282942ecac9c032785ac43cf90770c230e96bf19a2f2317",
+    "content": "21e2b6e34e11148908c8718ef5029d45bf5c4d86889b2f80075539c059754f39",
     "description": "1736b86a968ae735928a30a3ce40ea38016958fb34cf3023ed1042b861b946bb",
-    "schema_hash": "c43994d3b0ca4117c5d23f7e66587c21a9802d93dceb03245afaa406f46fe68b",
+    "schema_hash": "8ef90263927baf8ea99747717c271fe74d9efaefa093bd357dc2f8846140a937",
     "seed_hash": "1736b86a968ae735928a30a3ce40ea38016958fb34cf3023ed1042b861b946bb"
   },
   "en/cli-pack.md": {
-    "content": "db33f4c5b214ee2a650f17ae6a8a4529d5d9f385e2cb7b8d67aa985f3a243dab",
+    "content": "3033702dc5d942677c836f2bba82fb09a64c538df5d719a1b4ca8d40ac6b26e1",
     "description": "448f07400cbd723e8ce8c1e13ba7d8c033f0157a59556220d4c6f0cdd0d069b3",
-    "schema_hash": "7fd5cf766effc1289ba2a46fbeaeeef6711d84b43000303bb16dbf077244c485",
+    "schema_hash": "f64f1eadeaefc45622a56d300d74e778d5fe565160bdd2c0ac0a9527019a2e06",
     "seed_hash": "448f07400cbd723e8ce8c1e13ba7d8c033f0157a59556220d4c6f0cdd0d069b3"
   },
   "en/cli-unpack.md": {
-    "content": "a5b4be76880127f0e2f219704b7be175ba38fcfe27a402c09655dcdd70075870",
+    "content": "6706a9dbcd6215efe7047077dc076598bcb257579248926d6367e263a30b8dd5",
     "description": "8027a9d4ad9f43177f32473367912bd564e0b9b4659d8024fb7eecb6855eb936",
-    "schema_hash": "0f9590e26281308ca1f3bb529f0c66f94527988901e7fd85f34dd26d8b48d6ce",
+    "schema_hash": "e20dfecb5e686f0f1b867b34ac4df5257375a76c06ff81e01a3cb65ffc65d912",
     "seed_hash": "8027a9d4ad9f43177f32473367912bd564e0b9b4659d8024fb7eecb6855eb936"
   },
   "en/cli-validate.md": {
-    "content": "d2323eb4b318dc699ba03767413b68f015870e8e94f11f0266217aa8e4f986a7",
+    "content": "428a22cc3b509e56d5c9704c7d586a92a5a49652b173ce3eb5ed6540a92f3fd2",
     "description": "d94a3a6cb05a100ede036f10127d3846e05e7b757bc7ae9b31963c9c14f217c6",
-    "schema_hash": "9af3449c8d14faae3eb0270afd87954ccba4ecdc296a2e3689529b73145fcd88",
+    "schema_hash": "a4aa021b6e25087a91c8ed5bcb839e02571dfee552e64851c34dc88088648e15",
     "seed_hash": "d94a3a6cb05a100ede036f10127d3846e05e7b757bc7ae9b31963c9c14f217c6"
   },
   "en/cli-watch.md": {
-    "content": "0ff9a000c32c49eb9770083d4309dc70dde0181c0f942ceb46973ec670dfa2fd",
+    "content": "f13b27ebeae987ac0ce0a0579f431c7723bbf65443642bb5d55bd3f160826062",
     "description": "e879b95d1edb2f91e07b02fcd60b6833a726afbab2d83f3e7f307fd8000e55cc",
-    "schema_hash": "28b438666f46630089f74b5225a92c178d359ab3884264247200129197cf816c",
+    "schema_hash": "dcaef44e53cbd95f233f2e5f8c9940afb18a2457c0d85f6737e27d4894c2e8ec",
     "seed_hash": "e879b95d1edb2f91e07b02fcd60b6833a726afbab2d83f3e7f307fd8000e55cc"
   },
   "en/gen-index.md": {
