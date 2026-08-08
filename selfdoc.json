@@ -25,10 +25,6 @@
       "predraw._*_validator"
     ]
   },
-  "deploy": {
-    "provider": "cloudflare-pages",
-    "project": "predraw"
-  },
   "topology": {
     "slug": "predraw",
     "docs_base": "https://docs.smmh.dev",
