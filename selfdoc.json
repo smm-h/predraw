@@ -1,6 +1,14 @@
 {
   "version": "0.3.0",
   "base_url": "https://predraw.smmh.dev",
+  "search_engine": "pagefind",
+  "author": {
+    "name": "SMMH",
+    "url": "https://smmh.dev",
+    "same_as": [
+      "https://github.com/smm-h"
+    ]
+  },
   "source": [
     {
       "path": "predraw/",
@@ -9,8 +17,7 @@
   ],
   "versions": [
     {
-      "version": "0.3.0",
-      "indexed": true
+      "version": "0.3.0"
     }
   ],
   "locales": [
@@ -27,7 +34,7 @@
   },
   "topology": {
     "slug": "predraw",
-    "docs_base": "https://docs.smmh.dev",
+    "docs_base": "https://smmh.dev",
     "posts_base": "https://blog.smmh.dev",
     "projects": {
       "pixelweaver": "https://docs.smmh.dev/pixelweaver",
