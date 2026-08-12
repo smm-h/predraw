@@ -17,12 +17,12 @@ Version: :-: var key="project.version"
 
 ## Commands
 
-- [build](cli-build.html) -- Build scene into output files
-- [pack](cli-pack.html) -- Pack a scene directory into a single JSON file
-- [unpack](cli-unpack.html) -- Unpack a packed JSON file into a project directory
-- [init](cli-init.html) -- Create a starter project in a directory
-- [watch](cli-watch.html) -- Watch project files and rebuild on change
-- [validate](cli-validate.html) -- Validate a scene or config JSON file against its schema
+- [build](../cli-build/) -- Build scene into output files
+- [pack](../cli-pack/) -- Pack a scene directory into a single JSON file
+- [unpack](../cli-unpack/) -- Unpack a packed JSON file into a project directory
+- [init](../cli-init/) -- Create a starter project in a directory
+- [watch](../cli-watch/) -- Watch project files and rebuild on change
+- [validate](../cli-validate/) -- Validate a scene or config JSON file against its schema
 
 ## Framework flags
 
