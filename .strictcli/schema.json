@@ -1,42 +1,64 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "defaults": {
-    "schema_version": 1,
+    "schema_version": 2,
     "app": {
       "env_prefix": null,
       "config": false,
+      "config_format": "json",
+      "config_path": null,
+      "config_conflict_mode": "cli-wins",
+      "proc_observe_allowlist": [],
       "global_flags": [],
       "commands": {},
       "groups": {},
       "deprecated": {},
-      "tag_contracts": {}
+      "tag_contracts": {},
+      "checks": {},
+      "config_fields": {},
+      "infra": {}
     },
     "flag": {
       "short": null,
-      "default": null,
       "env": null,
-      "choices": null,
-      "repeatable": false,
-      "unique": false,
       "env_separator": null,
+      "prefixed": true,
+      "choices": null,
+      "elect_by": null,
+      "unique": false,
+      "conflict_mode": null,
       "negatable": null,
-      "hidden": false
+      "nullable": false
     },
     "arg": {
-      "type": "str",
-      "required": true,
-      "default": null,
       "variadic": false,
       "choices": null
     },
+    "choice": {
+      "flags": []
+    },
+    "choice_record": {
+      "help": null
+    },
     "command": {
+      "consequential": false,
+      "dry_run_supported": true,
+      "dry_run_unsupported_reason": null,
+      "update_of": null,
+      "write_mode": null,
+      "payload_schema": null,
+      "owns_stdout": false,
       "passthrough": false,
       "flags": [],
+      "flag_sets": [],
       "args": [],
       "tags": [],
       "constraints": [],
       "hidden": false,
-      "interactive": false
+      "interactive": false,
+      "config_fields": [],
+      "grants": [],
+      "forwarding": null
     },
     "group": {
       "commands": {},
@@ -44,6 +66,18 @@
       "deprecated": {},
       "tags": [],
       "hidden": false
+    },
+    "config_field": {
+      "default": null,
+      "bound_commands": []
+    },
+    "check": {
+      "scope": null
+    },
+    "infra": {
+      "roots": [],
+      "handshakes": [],
+      "connections": []
     }
   },
   "project_id": "predraw",
@@ -58,9 +92,11 @@
       "args": [
         {
           "name": "path",
-          "help": "Project directory or scene file (default: .)",
-          "required": false,
-          "default": "."
+          "help": "Project directory or scene file. Omitted, the current directory is built.",
+          "value_schema": {
+            "type": "string"
+          },
+          "presence": "optional"
         }
       ]
     },
@@ -71,18 +107,22 @@
       "flags": [
         {
           "name": "output",
-          "type": "str",
-          "help": "Output file path (default: packed.json)",
+          "help": "Output file path. Omitted, the scene is written to packed.json.",
+          "value_schema": {
+            "type": "string"
+          },
           "short": "o",
-          "default": "packed.json"
+          "presence": "optional"
         }
       ],
       "args": [
         {
           "name": "path",
-          "help": "Project directory or scene file (default: .)",
-          "required": false,
-          "default": "."
+          "help": "Project directory or scene file. Omitted, the current directory is packed.",
+          "value_schema": {
+            "type": "string"
+          },
+          "presence": "optional"
         }
       ]
     },
@@ -93,16 +133,22 @@
       "flags": [
         {
           "name": "output",
-          "type": "str",
-          "help": "Output directory (default: .)",
+          "help": "Output directory. Omitted, the project is unpacked into the current directory.",
+          "value_schema": {
+            "type": "string"
+          },
           "short": "o",
-          "default": "."
+          "presence": "optional"
         }
       ],
       "args": [
         {
           "name": "file",
-          "help": "Packed JSON file to unpack"
+          "help": "Packed JSON file to unpack",
+          "value_schema": {
+            "type": "string"
+          },
+          "presence": "required"
         }
       ]
     },
@@ -113,9 +159,11 @@
       "args": [
         {
           "name": "path",
-          "help": "Directory to initialize (default: .)",
-          "required": false,
-          "default": "."
+          "help": "Directory to initialize. Omitted, the current directory is initialized.",
+          "value_schema": {
+            "type": "string"
+          },
+          "presence": "optional"
         }
       ]
     },
@@ -126,9 +174,11 @@
       "args": [
         {
           "name": "path",
-          "help": "Project directory (default: .)",
-          "required": false,
-          "default": "."
+          "help": "Project directory. Omitted, the current directory is watched.",
+          "value_schema": {
+            "type": "string"
+          },
+          "presence": "optional"
         }
       ]
     },
@@ -139,20 +189,35 @@
       "flags": [
         {
           "name": "schema",
-          "type": "str",
-          "help": "Force schema type (auto-detected if omitted)",
-          "default": "",
+          "help": "Force the schema to validate against. Omitted, it is detected from the file.",
+          "value_schema": {
+            "type": "string",
+            "enum": [
+              "scene",
+              "config"
+            ]
+          },
+          "presence": "optional",
           "choices": [
-            "scene",
-            "config",
-            ""
+            {
+              "value": "scene",
+              "help": "validate against the scene schema"
+            },
+            {
+              "value": "config",
+              "help": "validate against the output-config schema"
+            }
           ]
         }
       ],
       "args": [
         {
           "name": "file",
-          "help": "JSON file to validate"
+          "help": "JSON file to validate",
+          "value_schema": {
+            "type": "string"
+          },
+          "presence": "required"
         }
       ]
     }
