@@ -9,7 +9,12 @@ dependencies = [
     "cairosvg>=2.7",
     "fonttools>=4.62.1",
     "pillow>=10.0",
-    "strictcli>=0.36.0",
+    # Floor, not a pin. The 0.41 line makes presence a mandatory declaration on
+    # every flag and arg, deletes the arg `required=` field, bans a value
+    # default on a mutating command, and requires every `choices=` entry to be
+    # a record. cli.py is written against all four, and an older strictcli has
+    # no `presence=` keyword at all.
+    "strictcli>=0.41.1",
     "strictspec>=0.1.0",
 ]
 

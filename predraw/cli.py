@@ -21,6 +21,15 @@ from .validator import validate_config, validate_scene
 
 app = strictcli.App(name="predraw", version=__version__, help="predraw scene builder")
 
+# Handler-side fallbacks for the optional path arguments and output flags.
+# They cannot be declared defaults: every command that takes one is mutating,
+# and strictcli forbids a value default there -- absence must not resolve to a
+# value the invocation never stated. Each fallback is named in the declaration's
+# own help text.
+_DEFAULT_PROJECT_PATH = "."
+_DEFAULT_PACK_OUTPUT = "packed.json"
+_DEFAULT_UNPACK_OUTPUT = "."
+
 
 def main():
     """Entry point for the predraw CLI."""
@@ -37,12 +46,16 @@ def main():
     effect="mutating",
     help="Build scene into output files",
     args=[
-        strictcli.Arg(name="path", help="Project directory or scene file (default: .)", required=False, default="."),
+        strictcli.Arg(
+            name="path",
+            help="Project directory or scene file. Omitted, the current directory is built.",
+            presence="optional",
+        ),
     ],
 )
-def _cmd_build(ctx, path: str) -> None:
+def _cmd_build(ctx, path: str | None = None) -> None:
     """Build all outputs for a scene, grouped by mode to avoid redundant work."""
-    return _build(path, dry_run=ctx.dry_run)
+    return _build(_DEFAULT_PROJECT_PATH if path is None else path, dry_run=ctx.dry_run)
 
 
 def _build(path: str, *, dry_run: bool) -> int:
@@ -116,16 +129,26 @@ def _build(path: str, *, dry_run: bool) -> int:
     effect="mutating",
     help="Pack a scene directory into a single JSON file",
     args=[
-        strictcli.Arg(name="path", help="Project directory or scene file (default: .)", required=False, default="."),
+        strictcli.Arg(
+            name="path",
+            help="Project directory or scene file. Omitted, the current directory is packed.",
+            presence="optional",
+        ),
     ],
 )
-@strictcli.flag("output", short="o", type=str, default="packed.json", help="Output file path (default: packed.json)")
-def _cmd_pack(ctx, path: str, *, output: str) -> None:
+@strictcli.flag(
+    "output",
+    short="o",
+    type=str,
+    presence="optional",
+    help="Output file path. Omitted, the scene is written to packed.json.",
+)
+def _cmd_pack(ctx, path: str | None = None, *, output: str | None = None) -> None:
     """Pack a scene directory into a single self-contained JSON file."""
-    scene = load_scene(path)
+    scene = load_scene(_DEFAULT_PROJECT_PATH if path is None else path)
     packed = pack_scene(scene)
 
-    out_path = Path(output)
+    out_path = Path(_DEFAULT_PACK_OUTPUT if output is None else output)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(packed, indent=2), encoding="utf-8")
     print(f"Packed scene written to: {out_path}")
@@ -142,21 +165,24 @@ def _cmd_pack(ctx, path: str, *, output: str) -> None:
     effect="mutating",
     help="Unpack a packed JSON file into a project directory",
     args=[
-        strictcli.Arg(name="file", help="Packed JSON file to unpack"),
+        strictcli.Arg(name="file", help="Packed JSON file to unpack", presence="required"),
     ],
 )
-@strictcli.flag("output", short="o", type=str, default=".", help="Output directory (default: .)")
-def _cmd_unpack(ctx, file: str, *, output: str) -> None:
+@strictcli.flag(
+    "output",
+    short="o",
+    type=str,
+    presence="optional",
+    help="Output directory. Omitted, the project is unpacked into the current directory.",
+)
+def _cmd_unpack(ctx, file: str, *, output: str | None = None) -> None:
     """Unpack a packed JSON file into a project directory."""
     file_path = Path(file)
     if not file_path.exists():
         raise FileNotFoundError(f"File not found: {file}")
 
-    with open(file_path, "r", encoding="utf-8") as f:
-        data = json.load(f)
-
     scene = load_scene(str(file_path))
-    unpack_scene(scene, output)
+    unpack_scene(scene, _DEFAULT_UNPACK_OUTPUT if output is None else output)
     return 0
 
 
@@ -201,12 +227,16 @@ _STARTER_CONFIG = {
     effect="mutating",
     help="Create a starter project in a directory",
     args=[
-        strictcli.Arg(name="path", help="Directory to initialize (default: .)", required=False, default="."),
+        strictcli.Arg(
+            name="path",
+            help="Directory to initialize. Omitted, the current directory is initialized.",
+            presence="optional",
+        ),
     ],
 )
-def _cmd_init(ctx, path: str) -> None:
+def _cmd_init(ctx, path: str | None = None) -> None:
     """Create a starter predraw project in the given directory."""
-    target = Path(path)
+    target = Path(_DEFAULT_PROJECT_PATH if path is None else path)
     main_file = target / "main.json"
 
     if main_file.exists():
@@ -260,12 +290,16 @@ def _detect_changes(prev_mtimes: dict[Path, float], curr_mtimes: dict[Path, floa
     effect="mutating",
     help="Watch project files and rebuild on change",
     args=[
-        strictcli.Arg(name="path", help="Project directory (default: .)", required=False, default="."),
+        strictcli.Arg(
+            name="path",
+            help="Project directory. Omitted, the current directory is watched.",
+            presence="optional",
+        ),
     ],
 )
-def _cmd_watch(ctx, path: str) -> None:
+def _cmd_watch(ctx, path: str | None = None) -> None:
     """Watch project files and rebuild on change."""
-    project_dir = Path(path).resolve()
+    project_dir = Path(_DEFAULT_PROJECT_PATH if path is None else path).resolve()
 
     if not project_dir.is_dir():
         print(f"Error: {project_dir} is not a directory", file=sys.stderr)
@@ -316,11 +350,20 @@ def _cmd_watch(ctx, path: str) -> None:
     effect="read_only",
     help="Validate a scene or config JSON file against its schema",
     args=[
-        strictcli.Arg(name="file", help="JSON file to validate"),
+        strictcli.Arg(name="file", help="JSON file to validate", presence="required"),
     ],
 )
-@strictcli.flag("schema", type=str, default="", choices=["scene", "config", ""], help="Force schema type (auto-detected if omitted)")
-def _cmd_validate(ctx, file: str, *, schema: str) -> None:
+@strictcli.flag(
+    "schema",
+    type=str,
+    presence="optional",
+    choices=[
+        strictcli.Choice("scene", help="validate against the scene schema"),
+        strictcli.Choice("config", help="validate against the output-config schema"),
+    ],
+    help="Force the schema to validate against. Omitted, it is detected from the file.",
+)
+def _cmd_validate(ctx, file: str, *, schema: str | None = None) -> None:
     """Validate a JSON file against its scene or config schema."""
     file_path = Path(file)
     if not file_path.exists():
@@ -329,8 +372,11 @@ def _cmd_validate(ctx, file: str, *, schema: str) -> None:
     with open(file_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
-    # Auto-detect schema type if not forced: presence of "outputs" key means config
-    schema_type = schema if schema else ("config" if "outputs" in data else "scene")
+    # Auto-detect the schema when none was forced: an "outputs" key means config.
+    # The third choice used to be the empty string, which was the flag's own
+    # default and meant "auto-detect" -- absence spelled as a value. Absence
+    # spells itself now, so the choices are the two real schemas.
+    schema_type = schema if schema is not None else ("config" if "outputs" in data else "scene")
 
     if schema_type == "config":
         errors = validate_config(data)
