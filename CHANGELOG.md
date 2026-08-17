@@ -2,6 +2,39 @@
 
 # Changelog
 
+## 0.4.0
+
+Every argument and flag says whether it is required, and --schema no longer takes the empty string.
+
+<details>
+<summary>Context</summary>
+
+strictcli 0.41 makes presence a declaration rather than something the framework
+infers, and forbids a value default on a command that writes. Five of predraw's
+six commands write, and each of them took a path or an output location the
+framework filled in.
+
+Those fallbacks have not changed -- `predraw build` with no argument still
+builds the current directory, `predraw pack` still writes packed.json -- but the
+handler applies them now and each declaration's help states the one it applies,
+so a reader of `--help` learns it from the flag rather than from the source.
+
+`validate --schema` loses its third choice. The empty string was both a legal
+value and the flag's default, and it meant "detect the schema from the file",
+which is also what omitting the flag means. One request had two spellings, and
+the value-shaped one is gone: `--schema ""` is now refused, and the two
+remaining choices each carry a line of help.
+
+</details>
+
+### Breaking
+
+- **`predraw validate --schema ""` is refused instead of meaning "detect it".** The flag's third choice was the empty string, which was also its default, so absence was a value the caller could type -- two spellings of one request. The choices are the two real schemas now, each with a line of help in `--help`; omit the flag to have the schema detected from the file, as before.
+
+### Features
+
+- **`--help` says whether each argument and flag is required.** Every positional and every flag renders `[required]` or `[optional]`, and the fallbacks that used to be framework-supplied defaults -- the current directory for `build`, `pack`, `init` and `watch`, `packed.json` for `pack -o`, the current directory for `unpack -o` -- are stated in each declaration's own help. Every command line that worked before works unchanged.
+
 ## 0.3.0
 
 strictspec validation for scene and config documents, a working CLI on strictcli 0.36.0, and an enforced strictcli floor.
