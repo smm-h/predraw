@@ -16,12 +16,12 @@ Validate a scene or config JSON file against its schema
 
 ## Flags
 
-| Name | Short | Type | Default | Env | Description |
+| Name | Short | Type | Presence | Env | Description |
 | --- | --- | --- | --- | --- | --- |
-| `--schema` |  | str |  |  | Force schema type (auto-detected if omitted) |
+| `--schema` |  | str | optional |  | Force the schema to validate against. Omitted, it is detected from the file. Values: `scene` (validate against the scene schema), `config` (validate against the output-config schema). |
 
 ## Arguments
 
-| Name | Required | Description |
-| --- | --- | --- |
-| `file` | yes | JSON file to validate |
+| Name | Type | Presence | Description |
+| --- | --- | --- | --- |
+| `file` | str | required | JSON file to validate |

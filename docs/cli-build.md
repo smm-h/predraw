@@ -16,6 +16,6 @@ Build scene into output files
 
 ## Arguments
 
-| Name | Required | Description |
-| --- | --- | --- |
-| `path` | no | Project directory or scene file (default: .) |
+| Name | Type | Presence | Description |
+| --- | --- | --- | --- |
+| `path` | str | optional | Project directory or scene file. Omitted, the current directory is built. |

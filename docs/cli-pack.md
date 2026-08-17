@@ -16,12 +16,12 @@ Pack a scene directory into a single JSON file
 
 ## Flags
 
-| Name | Short | Type | Default | Env | Description |
+| Name | Short | Type | Presence | Env | Description |
 | --- | --- | --- | --- | --- | --- |
-| `--output` | `-o` | str | packed.json |  | Output file path (default: packed.json) |
+| `--output` | `-o` | str | optional |  | Output file path. Omitted, the scene is written to packed.json. |
 
 ## Arguments
 
-| Name | Required | Description |
-| --- | --- | --- |
-| `path` | no | Project directory or scene file (default: .) |
+| Name | Type | Presence | Description |
+| --- | --- | --- | --- |
+| `path` | str | optional | Project directory or scene file. Omitted, the current directory is packed. |

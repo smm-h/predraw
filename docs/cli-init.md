@@ -16,6 +16,6 @@ Create a starter project in a directory
 
 ## Arguments
 
-| Name | Required | Description |
-| --- | --- | --- |
-| `path` | no | Directory to initialize (default: .) |
+| Name | Type | Presence | Description |
+| --- | --- | --- | --- |
+| `path` | str | optional | Directory to initialize. Omitted, the current directory is initialized. |

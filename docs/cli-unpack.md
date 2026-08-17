@@ -16,12 +16,12 @@ Unpack a packed JSON file into a project directory
 
 ## Flags
 
-| Name | Short | Type | Default | Env | Description |
+| Name | Short | Type | Presence | Env | Description |
 | --- | --- | --- | --- | --- | --- |
-| `--output` | `-o` | str | . |  | Output directory (default: .) |
+| `--output` | `-o` | str | optional |  | Output directory. Omitted, the project is unpacked into the current directory. |
 
 ## Arguments
 
-| Name | Required | Description |
-| --- | --- | --- |
-| `file` | yes | Packed JSON file to unpack |
+| Name | Type | Presence | Description |
+| --- | --- | --- | --- |
+| `file` | str | required | Packed JSON file to unpack |

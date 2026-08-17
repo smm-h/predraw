@@ -16,6 +16,6 @@ Watch project files and rebuild on change
 
 ## Arguments
 
-| Name | Required | Description |
-| --- | --- | --- |
-| `path` | no | Project directory (default: .) |
+| Name | Type | Presence | Description |
+| --- | --- | --- | --- |
+| `path` | str | optional | Project directory. Omitted, the current directory is watched. |

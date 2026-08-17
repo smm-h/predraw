@@ -175,7 +175,7 @@
         },
         {
           "level": 2,
-          "text": "predraw",
+          "text": "`predraw`",
           "anchor": "predraw"
         }
       ]
@@ -192,7 +192,7 @@
         },
         {
           "level": 2,
-          "text": "predraw.__main__",
+          "text": "`predraw.__main__`",
           "anchor": "predraw__main__"
         }
       ]
@@ -209,22 +209,22 @@
         },
         {
           "level": 2,
-          "text": "predraw.bbox",
+          "text": "`predraw.bbox`",
           "anchor": "predrawbbox"
         },
         {
           "level": 3,
-          "text": "compute_bbox",
+          "text": "`compute_bbox`",
           "anchor": "compute_bbox"
         },
         {
           "level": 3,
-          "text": "_bbox_from_path_d",
+          "text": "`_bbox_from_path_d`",
           "anchor": "_bbox_from_path_d"
         },
         {
           "level": 3,
-          "text": "_apply_transform_to_bbox",
+          "text": "`_apply_transform_to_bbox`",
           "anchor": "_apply_transform_to_bbox"
         }
       ]
@@ -241,97 +241,97 @@
         },
         {
           "level": 2,
-          "text": "predraw.cli",
+          "text": "`predraw.cli`",
           "anchor": "predrawcli"
         },
         {
           "level": 3,
-          "text": "main",
+          "text": "`main`",
           "anchor": "main"
         },
         {
           "level": 3,
-          "text": "_cmd_build",
+          "text": "`_cmd_build`",
           "anchor": "_cmd_build"
         },
         {
           "level": 3,
-          "text": "_build",
+          "text": "`_build`",
           "anchor": "_build"
         },
         {
           "level": 3,
-          "text": "_cmd_pack",
+          "text": "`_cmd_pack`",
           "anchor": "_cmd_pack"
         },
         {
           "level": 3,
-          "text": "_cmd_unpack",
+          "text": "`_cmd_unpack`",
           "anchor": "_cmd_unpack"
         },
         {
           "level": 3,
-          "text": "_cmd_init",
+          "text": "`_cmd_init`",
           "anchor": "_cmd_init"
         },
         {
           "level": 3,
-          "text": "_collect_json_files",
+          "text": "`_collect_json_files`",
           "anchor": "_collect_json_files"
         },
         {
           "level": 3,
-          "text": "_get_mtimes",
+          "text": "`_get_mtimes`",
           "anchor": "_get_mtimes"
         },
         {
           "level": 3,
-          "text": "_detect_changes",
+          "text": "`_detect_changes`",
           "anchor": "_detect_changes"
         },
         {
           "level": 3,
-          "text": "_cmd_watch",
+          "text": "`_cmd_watch`",
           "anchor": "_cmd_watch"
         },
         {
           "level": 3,
-          "text": "_cmd_validate",
+          "text": "`_cmd_validate`",
           "anchor": "_cmd_validate"
         },
         {
           "level": 3,
-          "text": "pack_scene",
+          "text": "`pack_scene`",
           "anchor": "pack_scene"
         },
         {
           "level": 3,
-          "text": "_assign_ids",
+          "text": "`_assign_ids`",
           "anchor": "_assign_ids"
         },
         {
           "level": 3,
-          "text": "unpack_scene",
+          "text": "`unpack_scene`",
           "anchor": "unpack_scene"
         },
         {
           "level": 3,
-          "text": "_scene_to_dict",
+          "text": "`_scene_to_dict`",
           "anchor": "_scene_to_dict"
         },
         {
           "level": 3,
-          "text": "_element_to_dict",
+          "text": "`_element_to_dict`",
           "anchor": "_element_to_dict"
         },
         {
           "level": 3,
-          "text": "_gradient_to_dict",
+          "text": "`_gradient_to_dict`",
           "anchor": "_gradient_to_dict"
         },
         {
           "level": 3,
-          "text": "_char_style_to_dict",
+          "text": "`_char_style_to_dict`",
           "anchor": "_char_style_to_dict"
         }
       ]
@@ -348,22 +348,22 @@
         },
         {
           "level": 2,
-          "text": "predraw.fonts",
+          "text": "`predraw.fonts`",
           "anchor": "predrawfonts"
         },
         {
           "level": 3,
-          "text": "_font_directories",
+          "text": "`_font_directories`",
           "anchor": "_font_directories"
         },
         {
           "level": 3,
-          "text": "find_font",
+          "text": "`find_font`",
           "anchor": "find_font"
         },
         {
           "level": 3,
-          "text": "get_glyph_paths",
+          "text": "`get_glyph_paths`",
           "anchor": "get_glyph_paths"
         }
       ]
@@ -380,57 +380,57 @@
         },
         {
           "level": 2,
-          "text": "predraw.loader",
+          "text": "`predraw.loader`",
           "anchor": "predrawloader"
         },
         {
           "level": 3,
-          "text": "load_scene",
+          "text": "`load_scene`",
           "anchor": "load_scene"
         },
         {
           "level": 3,
-          "text": "_load_json",
+          "text": "`_load_json`",
           "anchor": "_load_json"
         },
         {
           "level": 3,
-          "text": "_canonicalize_aliases",
+          "text": "`_canonicalize_aliases`",
           "anchor": "_canonicalize_aliases"
         },
         {
           "level": 3,
-          "text": "_parse_scene",
+          "text": "`_parse_scene`",
           "anchor": "_parse_scene"
         },
         {
           "level": 3,
-          "text": "_parse_element",
+          "text": "`_parse_element`",
           "anchor": "_parse_element"
         },
         {
           "level": 3,
-          "text": "_parse_gradient",
+          "text": "`_parse_gradient`",
           "anchor": "_parse_gradient"
         },
         {
           "level": 3,
-          "text": "_resolve_imports",
+          "text": "`_resolve_imports`",
           "anchor": "_resolve_imports"
         },
         {
           "level": 3,
-          "text": "resolve_styles",
+          "text": "`resolve_styles`",
           "anchor": "resolve_styles"
         },
         {
           "level": 3,
-          "text": "_resolve_element_styles",
+          "text": "`_resolve_element_styles`",
           "anchor": "_resolve_element_styles"
         },
         {
           "level": 3,
-          "text": "load_config",
+          "text": "`load_config`",
           "anchor": "load_config"
         }
       ]
@@ -447,47 +447,47 @@
         },
         {
           "level": 2,
-          "text": "predraw.model",
+          "text": "`predraw.model`",
           "anchor": "predrawmodel"
         },
         {
           "level": 3,
-          "text": "Style",
+          "text": "`Style`",
           "anchor": "style"
         },
         {
           "level": 3,
-          "text": "Font",
+          "text": "`Font`",
           "anchor": "font"
         },
         {
           "level": 3,
-          "text": "Transform",
+          "text": "`Transform`",
           "anchor": "transform"
         },
         {
           "level": 3,
-          "text": "GradientStop",
+          "text": "`GradientStop`",
           "anchor": "gradientstop"
         },
         {
           "level": 3,
-          "text": "Gradient",
+          "text": "`Gradient`",
           "anchor": "gradient"
         },
         {
           "level": 3,
-          "text": "CharStyle",
+          "text": "`CharStyle`",
           "anchor": "charstyle"
         },
         {
           "level": 3,
-          "text": "Element",
+          "text": "`Element`",
           "anchor": "element"
         },
         {
           "level": 3,
-          "text": "Scene",
+          "text": "`Scene`",
           "anchor": "scene"
         }
       ]
@@ -504,27 +504,27 @@
         },
         {
           "level": 2,
-          "text": "predraw.output",
+          "text": "`predraw.output`",
           "anchor": "predrawoutput"
         },
         {
           "level": 3,
-          "text": "write_outputs",
+          "text": "`write_outputs`",
           "anchor": "write_outputs"
         },
         {
           "level": 3,
-          "text": "_write_svg",
+          "text": "`_write_svg`",
           "anchor": "_write_svg"
         },
         {
           "level": 3,
-          "text": "_write_png",
+          "text": "`_write_png`",
           "anchor": "_write_png"
         },
         {
           "level": 3,
-          "text": "_write_webp",
+          "text": "`_write_webp`",
           "anchor": "_write_webp"
         }
       ]
@@ -541,72 +541,72 @@
         },
         {
           "level": 2,
-          "text": "predraw.pipeline",
+          "text": "`predraw.pipeline`",
           "anchor": "predrawpipeline"
         },
         {
           "level": 3,
-          "text": "execute_pipeline",
+          "text": "`execute_pipeline`",
           "anchor": "execute_pipeline"
         },
         {
           "level": 3,
-          "text": "_execute_step",
+          "text": "`_execute_step`",
           "anchor": "_execute_step"
         },
         {
           "level": 3,
-          "text": "_find_element",
+          "text": "`_find_element`",
           "anchor": "_find_element"
         },
         {
           "level": 3,
-          "text": "_find_and_remove",
+          "text": "`_find_and_remove`",
           "anchor": "_find_and_remove"
         },
         {
           "level": 3,
-          "text": "_center",
+          "text": "`_center`",
           "anchor": "_center"
         },
         {
           "level": 3,
-          "text": "_center_text",
+          "text": "`_center_text`",
           "anchor": "_center_text"
         },
         {
           "level": 3,
-          "text": "_center_rect",
+          "text": "`_center_rect`",
           "anchor": "_center_rect"
         },
         {
           "level": 3,
-          "text": "_center_group",
+          "text": "`_center_group`",
           "anchor": "_center_group"
         },
         {
           "level": 3,
-          "text": "_center_with_transform",
+          "text": "`_center_with_transform`",
           "anchor": "_center_with_transform"
         },
         {
           "level": 3,
-          "text": "_place",
+          "text": "`_place`",
           "anchor": "_place"
         },
         {
           "level": 3,
-          "text": "_group",
+          "text": "`_group`",
           "anchor": "_group"
         },
         {
           "level": 3,
-          "text": "_replace_element",
+          "text": "`_replace_element`",
           "anchor": "_replace_element"
         },
         {
           "level": 3,
-          "text": "_text_to_paths",
+          "text": "`_text_to_paths`",
           "anchor": "_text_to_paths"
         }
       ]
@@ -623,87 +623,87 @@
         },
         {
           "level": 2,
-          "text": "predraw.renderer",
+          "text": "`predraw.renderer`",
           "anchor": "predrawrenderer"
         },
         {
           "level": 3,
-          "text": "render_svg",
+          "text": "`render_svg`",
           "anchor": "render_svg"
         },
         {
           "level": 3,
-          "text": "_stroke_attrs",
+          "text": "`_stroke_attrs`",
           "anchor": "_stroke_attrs"
         },
         {
           "level": 3,
-          "text": "_render_element",
+          "text": "`_render_element`",
           "anchor": "_render_element"
         },
         {
           "level": 3,
-          "text": "_render_transform",
+          "text": "`_render_transform`",
           "anchor": "_render_transform"
         },
         {
           "level": 3,
-          "text": "_render_text_with_char_styles",
+          "text": "`_render_text_with_char_styles`",
           "anchor": "_render_text_with_char_styles"
         },
         {
           "level": 3,
-          "text": "_render_plain_text",
+          "text": "`_render_plain_text`",
           "anchor": "_render_plain_text"
         },
         {
           "level": 3,
-          "text": "_render_group",
+          "text": "`_render_group`",
           "anchor": "_render_group"
         },
         {
           "level": 3,
-          "text": "_render_use",
+          "text": "`_render_use`",
           "anchor": "_render_use"
         },
         {
           "level": 3,
-          "text": "_apply_overrides",
+          "text": "`_apply_overrides`",
           "anchor": "_apply_overrides"
         },
         {
           "level": 3,
-          "text": "_match_char_style",
+          "text": "`_match_char_style`",
           "anchor": "_match_char_style"
         },
         {
           "level": 3,
-          "text": "_escape_xml",
+          "text": "`_escape_xml`",
           "anchor": "_escape_xml"
         },
         {
           "level": 3,
-          "text": "_collect_gradients",
+          "text": "`_collect_gradients`",
           "anchor": "_collect_gradients"
         },
         {
           "level": 3,
-          "text": "_render_defs",
+          "text": "`_render_defs`",
           "anchor": "_render_defs"
         },
         {
           "level": 3,
-          "text": "_render_linear_gradient",
+          "text": "`_render_linear_gradient`",
           "anchor": "_render_linear_gradient"
         },
         {
           "level": 3,
-          "text": "_render_radial_gradient",
+          "text": "`_render_radial_gradient`",
           "anchor": "_render_radial_gradient"
         },
         {
           "level": 3,
-          "text": "_fill_value",
+          "text": "`_fill_value`",
           "anchor": "_fill_value"
         }
       ]
@@ -720,37 +720,37 @@
         },
         {
           "level": 2,
-          "text": "predraw.validator",
+          "text": "`predraw.validator`",
           "anchor": "predrawvalidator"
         },
         {
           "level": 3,
-          "text": "SchemaValidationError",
+          "text": "`SchemaValidationError`",
           "anchor": "schemavalidationerror"
         },
         {
           "level": 3,
-          "text": "validate_scene",
+          "text": "`validate_scene`",
           "anchor": "validate_scene"
         },
         {
           "level": 3,
-          "text": "validate_config",
+          "text": "`validate_config`",
           "anchor": "validate_config"
         },
         {
           "level": 3,
-          "text": "ensure_valid_scene",
+          "text": "`ensure_valid_scene`",
           "anchor": "ensure_valid_scene"
         },
         {
           "level": 3,
-          "text": "ensure_valid_config",
+          "text": "`ensure_valid_config`",
           "anchor": "ensure_valid_config"
         },
         {
           "level": 3,
-          "text": "_diagnostics",
+          "text": "`_diagnostics`",
           "anchor": "_diagnostics"
         }
       ]
@@ -767,12 +767,13 @@
         },
         {
           "level": 2,
-          "text": "predraw",
+          "text": "`predraw`",
           "anchor": "predraw"
         }
       ]
     }
   ],
   "posts": [],
-  "last_gen": "2026-08-12T03:47:53.332527+00:00"
+  "last_gen": "2026-08-17T15:43:40.655371+00:00",
+  "theme": "minimal"
 }
