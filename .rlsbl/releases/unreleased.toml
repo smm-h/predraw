@@ -2,11 +2,27 @@
 format_version = 1
 # Version bump type: patch, minor, major, infra, or prerelease
 #   prerelease: advance an existing pre-release (0.6.0-beta.0 -> -beta.1)
-bump = ""
+bump = "minor"
 # Short description of this release (required)
-description = ""
+description = "Every argument and flag says whether it is required, and --schema no longer takes the empty string."
 # Optional context explaining why these changes were made
-context = ""
+context = """
+strictcli 0.41 makes presence a declaration rather than something the framework
+infers, and forbids a value default on a command that writes. Five of predraw's
+six commands write, and each of them took a path or an output location the
+framework filled in.
+
+Those fallbacks have not changed -- `predraw build` with no argument still
+builds the current directory, `predraw pack` still writes packed.json -- but the
+handler applies them now and each declaration's help states the one it applies,
+so a reader of `--help` learns it from the flag rather than from the source.
+
+`validate --schema` loses its third choice. The empty string was both a legal
+value and the flag's default, and it meant "detect the schema from the file",
+which is also what omitting the flag means. One request had two spellings, and
+the value-shaped one is gone: `--schema ""` is now refused, and the two
+remaining choices each carry a line of help.
+"""
 # Pre-release channel: alpha, beta, rc, or stable (ordered;
 # demotion is an error). With patch/minor/major it ENTERS the
 # channel (0.5.2 + minor + alpha -> 0.6.0-alpha.0); with
