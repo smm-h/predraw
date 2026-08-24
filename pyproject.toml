@@ -15,7 +15,7 @@ dependencies = [
     # a record. cli.py is written against all four, and an older strictcli has
     # no `presence=` keyword at all.
     "strictcli>=0.41.1",
-    "strictspec>=0.1.0",
+    "strictspec>=0.2.1",
 ]
 
 [project.scripts]
