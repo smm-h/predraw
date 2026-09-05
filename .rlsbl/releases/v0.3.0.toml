@@ -29,3 +29,7 @@ cannot start.
 # blog = false
 include = ["npm", "pypi"]
 exclude = []
+candidate_sha = "d8654d23902d96dd2e0b56796c46ce1a13acd3af"
+
+[tree_hashes]
+"." = "57760e785e39f941decfc922ad7a3a424522b312"

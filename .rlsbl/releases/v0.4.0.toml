@@ -33,3 +33,7 @@ remaining choices each carry a line of help.
 # blog = false
 include = ["npm", "pypi"]
 exclude = []
+candidate_sha = "287b8bf56d5602168e61e291d5bfaf993969507f"
+
+[tree_hashes]
+"." = "0c7386345a9afdaf368ca795efe5f3d33b655910"
