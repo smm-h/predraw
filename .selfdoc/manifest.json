@@ -5,7 +5,7 @@
   "version": "0.4.0",
   "description": "Declarative rendering pipeline that turns JSON scene files into SVG, PNG, and WebP, with light/dark style tokens, reusable components, and text converted to path outlines",
   "language": "python",
-  "base_url": "https://predraw.smmh.dev",
+  "base_url": "https://smmh.dev/predraw",
   "pages": [
     {
       "path": "cli-build.md",
@@ -774,6 +774,6 @@
     }
   ],
   "posts": [],
-  "last_gen": "2026-09-14T14:51:08.038280+00:00",
+  "last_gen": "2026-09-14T14:58:41.291698+00:00",
   "theme": "minimal"
 }
