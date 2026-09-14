@@ -1,1 +1,2 @@
 {"format_version":1,"id":"18d289eda48e3722c321e91f21914b35afaa14db2f4929d4","commits":["7b07a356f8814d89f484a002c1e2c84d898a542c"],"user_facing":false}
+{"format_version":1,"id":"18d53788135666e9430b6439e2384935a881d19f8ff8969e","commits":["da2d7f7524cb147e45f63b7ae92e172ac5b104e3"],"user_facing":true,"description":"**The project describes itself consistently on PyPI, npm and in its README.** The registry listings carried a terse tagline with no project URLs, no classifiers and no homepage, and the README opened without saying what predraw is.","type":"fix"}
