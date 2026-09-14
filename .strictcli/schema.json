@@ -82,7 +82,7 @@
   },
   "project_id": "predraw",
   "name": "predraw",
-  "version": "0.4.1",
+  "version": "0.4.2",
   "help": "predraw scene builder",
   "commands": {
     "build": {

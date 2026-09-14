@@ -1,6 +1,6 @@
 [project]
 name = "predraw"
-version = "0.4.1"
+version = "0.4.2"
 keywords = ["svg", "render", "json", "declarative", "png", "webp", "pipeline", "text-to-paths", "rlsbl"]
 description = "Declarative rendering pipeline that turns JSON scene files into SVG, PNG, and WebP, with light/dark style tokens, reusable components, and text converted to path outlines"
 readme = "README.md"
