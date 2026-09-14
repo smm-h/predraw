@@ -2,6 +2,15 @@
 
 # Changelog
 
+## 0.4.1
+
+The project describes itself consistently on PyPI, npm and in its README, and its documentation base is the unified site.
+
+### Fixes
+
+- **The project describes itself consistently on PyPI, npm and in its README.** The registry listings carried a terse tagline with no project URLs, no classifiers and no homepage, and the README opened without saying what predraw is.
+- **Documentation links point at the unified site.** The declared docs base was the retired per-project host; it is `https://smmh.dev/predraw/` now, so generated sitemaps, feeds and llms.txt name the address that serves the pages.
+
 ## 0.4.0
 
 Every argument and flag says whether it is required, and --schema no longer takes the empty string.
@@ -71,9 +80,13 @@ cannot start.
 
 ## 0.2.1
 
+Fix CI: Node shim test activates venv so Python deps are available
+
 - No user-facing changes.
 
 ## 0.2.0
+
+Stroke support (`stroke`, `strokeWidth`, `strokeDasharray`, `strokeLinecap`, `strokeLinejoin`, `strokeOpacity`)
 
 ### Features
 
@@ -88,12 +101,16 @@ cannot start.
 
 ## 0.1.2
 
+npm dual-publish — installable via `npm i -g predraw` (Node shim delegates to Python)
+
 ### Features
 
 - npm dual-publish — installable via `npm i -g predraw` (Node shim delegates to Python)
 - `predraw validate` documented in README
 
 ## 0.1.1
+
+Bounding box calculation for paths — `place` pipeline step now uses real geometry instead of font-size heuristic
 
 ### Features
 
@@ -102,6 +119,8 @@ cannot start.
 - Component property overrides — `use` elements can override `fill` (replaces) and `opacity` (multiplies) on referenced components
 
 ## 0.1.0
+
+Declarative JSON format for describing visual assets (rect, path, text, group, background)
 
 ### Features
 

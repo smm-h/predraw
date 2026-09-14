@@ -1,5 +1,5 @@
 {
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Declarative rendering pipeline that turns JSON scene files into SVG, PNG, and WebP, with light/dark style tokens, reusable components, and text converted to path outlines",
   "repo": "https://github.com/smm-h/predraw",
   "base_url": "https://smmh.dev/predraw",
@@ -19,7 +19,7 @@
   ],
   "versions": [
     {
-      "version": "0.4.0"
+      "version": "0.4.1"
     }
   ],
   "locales": [
