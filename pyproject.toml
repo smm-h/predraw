@@ -2,9 +2,16 @@
 name = "predraw"
 version = "0.4.0"
 keywords = ["svg", "render", "json", "declarative", "png", "webp", "pipeline", "text-to-paths", "rlsbl"]
-description = "Declarative rendering pipeline: JSON in, SVG/PNG/WebP out"
+description = "Declarative rendering pipeline that turns JSON scene files into SVG, PNG, and WebP, with light/dark style tokens, reusable components, and text converted to path outlines"
 readme = "README.md"
 requires-python = ">=3.11"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Intended Audience :: Developers",
+    "Environment :: Console",
+    "Operating System :: OS Independent",
+    "Topic :: Multimedia :: Graphics",
+]
 dependencies = [
     "cairosvg>=2.7",
     "fonttools>=4.62.1",
@@ -17,6 +24,13 @@ dependencies = [
     "strictcli>=0.41.1",
     "strictspec>=0.2.1",
 ]
+
+[project.urls]
+Homepage = "https://smmh.dev/predraw/"
+Documentation = "https://smmh.dev/predraw/"
+Repository = "https://github.com/smm-h/predraw"
+Issues = "https://github.com/smm-h/predraw/issues"
+Changelog = "https://github.com/smm-h/predraw/blob/main/CHANGELOG.md"
 
 [project.scripts]
 predraw = "predraw.cli:main"

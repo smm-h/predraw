@@ -1,10 +1,10 @@
 ---
-description: "predraw is a declarative rendering pipeline that turns JSON scene definitions into SVG, PNG, and WebP with style theming and layout."
+description: "predraw is a declarative rendering pipeline that turns JSON scene files into SVG, PNG, and WebP, with light/dark style tokens and reusable components."
 ---
 
 # predraw
 
-Declarative rendering pipeline: JSON in, SVG/PNG/WebP out
+predraw is a declarative rendering pipeline that turns JSON scene files into SVG, PNG, and WebP, with light/dark style tokens, reusable components, and text converted to path outlines.
 
 ## API Reference
 
