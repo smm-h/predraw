@@ -25,7 +25,6 @@ coverage/
 *.local-only
 
 # selfdoc / Cloudflare
-docs/_build/
 .wrangler/
 
 .rlsbl-monorepo/lock
