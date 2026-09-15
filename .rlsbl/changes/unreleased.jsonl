@@ -1,0 +1,1 @@
+{"format_version":1,"id":"18d5997f1ad942a9dd1281072c4c409c82b416083702bfc0","commits":["6226b93dae79b84264d74ded541b75603c5a474e"],"user_facing":true,"description":"**The tool describes itself with one sentence everywhere, including `--help`.** The `--help` header, README, docs site, PyPI and npm metadata now carry the same line.","type":"fix"}
