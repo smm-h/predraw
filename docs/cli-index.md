@@ -10,7 +10,7 @@ nav_order = 91
 
 # predraw CLI Reference
 
-predraw scene builder
+Declarative rendering pipeline: describe a scene in JSON and get SVG, PNG and WebP out, with light and dark style tokens, reusable components and text converted to path outlines
 
 Version: :-: var key="project.version"
 
