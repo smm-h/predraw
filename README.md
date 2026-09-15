@@ -1,6 +1,6 @@
 # predraw
 
-predraw is a declarative rendering pipeline that turns JSON scene files into SVG, PNG, and WebP, with light/dark style tokens, reusable components, and text converted to path outlines.
+Declarative rendering pipeline: describe a scene in JSON and get SVG, PNG and WebP out, with light and dark style tokens, reusable components and text converted to path outlines
 
 It is built for developers and AI agents that need repeatable, diffable vector assets -- logos, social cards, diagrams -- without hand-editing SVG. Every scene is plain JSON checked against a schema that ships with the tool, and one scene renders to as many outputs, formats and light/dark variants as its config declares.
 

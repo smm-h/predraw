@@ -19,7 +19,7 @@ from .pipeline import execute_pipeline
 from .renderer import render_svg
 from .validator import validate_config, validate_scene
 
-app = strictcli.App(name="predraw", version=__version__, help="predraw scene builder")
+app = strictcli.App(name="predraw", version=__version__, help="Declarative rendering pipeline: describe a scene in JSON and get SVG, PNG and WebP out, with light and dark style tokens, reusable components and text converted to path outlines")
 
 # Handler-side fallbacks for the optional path arguments and output flags.
 # They cannot be declared defaults: every command that takes one is mutating,
